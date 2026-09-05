@@ -1,0 +1,3123 @@
+<!DOCTYPE html>
+<html lang="pt-MZ">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>AgroMoz — a rede digital agronómica de Moçambique</title>
+
+<meta name="description" content="O AgroMoz liga agricultores, técnicos, fornecedores e as delegações do sector agrário num só sistema. Funciona no telemóvel de teclas, sem internet.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   AgroMoz — sítio institucional
+
+   A ABERTURA E O ECRA USSD, e nao um numero grande com gradiente.
+   Nenhuma outra plataforma agricola do mundo se abre com um Nokia —
+   e e essa a decisao que define o AgroMoz. O heroi da pagina tem de
+   ser a coisa mais caracteristica do produto.
+
+   AS CORES SAO AS DO PROPRIO SISTEMA: o verde-floresta do painel, o
+   verde-folha, o dourado com que a aplicacao marca o tecnico
+   verificado. Inventar uma paleta nova quando o produto ja tem a
+   sua seria comecar por desalinhar o sitio do que ele descreve.
+
+   TIPOGRAFIA AO CONTRARIO DO COSTUME: grotesca nos titulos, serifada
+   no corpo. Um sitio que explica como um sistema funciona tem muito
+   texto para ler, e serifada le-se melhor em paragrafo longo. A
+   monoespacada aparece so no ecra do telemovel, onde e literal.
+
+   NENHUM NUMERO DE UTILIZACAO. O piloto ainda nao arrancou, e um
+   numero inventado desmonta-se a primeira pergunta.
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root {
+  --floresta:  #123524;   /* o verde do painel das delegacoes */
+  --escuro:    #0A1F14;
+  --folha:     #2E8B57;
+  --musgo:     #97BC62;
+  --ouro:      #C9962C;   /* o dourado do tecnico verificado */
+  --creme:     #F5F7F3;
+  --papel:     #FFFFFF;
+  --tinta:     #16211B;
+  --sombra:    #5A6B60;
+  --linha:     #DDE5DE;
+
+  --largura:   1180px;
+  --coluna:    68ch;      /* menos de 80 caracteres, como manda a regra */
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 18px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, .grot {
+  font-family: 'Archivo', system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -.02em;
+  line-height: 1.1;
+  margin: 0;
+}
+
+p { margin: 0 0 1.1rem; max-width: var(--coluna); }
+p:last-child { margin-bottom: 0; }
+
+a { color: inherit; }
+
+:focus-visible {
+  outline: 3px solid var(--ouro);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.env {
+  width: 100%;
+  max-width: var(--largura);
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+/* ── cabeçalho ─────────────────────────────────────────────────── */
+.topo {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background: rgba(18, 53, 36, .96);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 255, 255, .1);
+}
+
+.topo-int {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  height: 68px;
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #fff;
+  font-family: 'Archivo', sans-serif;
+  font-weight: 800;
+  font-size: 19px;
+  letter-spacing: -.02em;
+}
+
+.nav {
+  display: flex;
+  gap: 24px;
+  margin-left: auto;
+  align-items: center;
+}
+
+.nav a {
+  color: rgba(255, 255, 255, .82);
+  text-decoration: none;
+  font-family: 'Archivo', sans-serif;
+  font-size: 14.5px;
+  font-weight: 500;
+  padding: 6px 0;
+  border-bottom: 2px solid transparent;
+  transition: color .16s, border-color .16s;
+}
+
+.nav a:hover { color: #fff; border-bottom-color: var(--musgo); }
+
+.nav-cta {
+  background: var(--ouro);
+  color: var(--escuro) !important;
+  padding: 9px 17px !important;
+  border-radius: 7px;
+  font-weight: 700;
+  border: 0 !important;
+}
+
+.nav-cta:hover { background: #D9A835; }
+
+.menu-btn {
+  display: none;
+  margin-left: auto;
+  background: none;
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 7px;
+  color: #fff;
+  padding: 7px 11px;
+  font-family: 'Archivo', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  .nav { display: none; }
+  .nav.aberto {
+    display: flex;
+    position: absolute;
+    top: 68px; left: 0; right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    background: var(--floresta);
+    padding: 8px 28px 20px;
+    border-bottom: 1px solid rgba(255,255,255,.12);
+  }
+  .nav.aberto a { padding: 13px 0; border-bottom: 1px solid rgba(255,255,255,.08); }
+  .nav.aberto .nav-cta { margin-top: 12px; text-align: center; }
+  .menu-btn { display: block; }
+}
+
+/* ── abertura ──────────────────────────────────────────────────── */
+/* PROFUNDIDADE EM CAMADAS, e nao um verde chapado. Tres luzes em
+   sitios diferentes, uma malha fina por cima e uma linha dourada no
+   fundo — e o que separa um fundo liso de um fundo trabalhado.
+
+   A malha e agricola de proposito: le-se como terreno visto de cima,
+   que e o assunto da pagina. */
+.abertura {
+  position: relative;
+  background:
+    radial-gradient(760px 460px at 84% -8%,  rgba(46,139,87,.34), transparent 64%),
+    radial-gradient(620px 520px at 8% 105%,  rgba(151,188,98,.16), transparent 62%),
+    radial-gradient(900px 300px at 50% 50%,  rgba(201,150,44,.06), transparent 70%),
+    linear-gradient(165deg, #17402B 0%, var(--floresta) 42%, var(--escuro) 100%);
+  color: #fff;
+  padding: 84px 0 92px;
+  overflow: hidden;
+}
+
+.abertura::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(151,188,98,.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(151,188,98,.055) 1px, transparent 1px);
+  background-size: 58px 58px;
+  mask-image: radial-gradient(900px 640px at 30% 40%, #000 15%, transparent 78%);
+  -webkit-mask-image: radial-gradient(900px 640px at 30% 40%, #000 15%, transparent 78%);
+  pointer-events: none;
+}
+
+.abertura::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent, rgba(201,150,44,.55) 22%, rgba(151,188,98,.4) 60%, transparent);
+}
+
+.abertura-grelha, .abertura .env { position: relative; z-index: 1; }
+
+.abertura-grelha {
+  display: grid;
+  grid-template-columns: 1.08fr .92fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.selo {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: 'Archivo', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--musgo);
+  border: 1px solid rgba(151,188,98,.34);
+  border-radius: 40px;
+  padding: 6px 15px 6px 11px;
+  margin-bottom: 26px;
+}
+
+/* A BANDEIRA SUBSTITUI O PONTO VERDE, e nao se junta a ele: dois
+   marcadores no mesmo selo competem, e o ponto so dizia 'activo',
+   que a bandeira ja nao precisa de dizer. */
+.selo-bandeira {
+  width: 20px;
+  height: 13.3px;
+  flex: none;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.18);
+}
+
+.selo-ponto {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--musgo);
+  flex: none;
+}
+
+.abertura h1 {
+  font-size: clamp(38px, 5.4vw, 66px);
+  font-weight: 800;
+  line-height: 1.02;
+  margin-bottom: 22px;
+}
+
+.abertura h1 .quebra { display: block; color: var(--musgo); }
+
+.abertura-texto {
+  font-size: 19.5px;
+  line-height: 1.62;
+  color: rgba(255,255,255,.86);
+  max-width: 52ch;
+  margin-bottom: 30px;
+}
+
+.accoes { display: flex; flex-wrap: wrap; gap: 13px; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: 'Archivo', sans-serif;
+  font-size: 15.5px;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 14px 25px;
+  border-radius: 9px;
+  border: 1px solid transparent;
+  transition: transform .14s, background .16s, border-color .16s;
+}
+
+.btn:hover { transform: translateY(-1px); }
+
+.btn-cheio { background: var(--ouro); color: var(--escuro); }
+.btn-cheio:hover { background: #D9A835; }
+
+.btn-vazio {
+  background: transparent;
+  color: #fff;
+  border-color: rgba(255,255,255,.28);
+}
+.btn-vazio:hover { border-color: var(--musgo); background: rgba(151,188,98,.1); }
+
+/* ── o telemóvel ───────────────────────────────────────────────── */
+/* O ECRA USSD E O HEROI DA PAGINA. E o unico sitio onde gasto
+   ousadia: tudo a volta e disciplinado e quieto. */
+/* O telemovel ganha um halo por tras: sem ele flutua sobre o fundo
+   sem peso, e este e o elemento que a pagina inteira serve. */
+.fone-palco { position: relative; justify-self: center; width: 100%; max-width: 340px; }
+
+.fone-palco::before {
+  content: '';
+  position: absolute;
+  inset: -14% -22%;
+  background:
+    radial-gradient(closest-side, rgba(151,188,98,.20), transparent 72%);
+  filter: blur(8px);
+  pointer-events: none;
+}
+
+.fone {
+  position: relative;
+  width: 100%;
+  background: linear-gradient(160deg, #1C2026 0%, #101318 100%);
+  border-radius: 32px;
+  padding: 16px 16px 26px;
+  border: 1px solid #333941;
+  box-shadow:
+    0 2px 0 rgba(255,255,255,.06) inset,
+    0 40px 80px rgba(0,0,0,.55),
+    0 8px 22px rgba(0,0,0,.4);
+}
+
+.fone::before {
+  content: '';
+  position: absolute;
+  top: 7px; left: 50%;
+  transform: translateX(-50%);
+  width: 52px; height: 4px;
+  border-radius: 3px;
+  background: #2A2E34;
+}
+
+.fone-ecra {
+  background:
+    radial-gradient(120% 80% at 50% 0%, #1026178a, transparent 60%),
+    #0A1710;
+  border: 1px solid #24462E;
+  box-shadow: 0 0 26px rgba(46,139,87,.14) inset;
+  border-radius: 9px;
+  padding: 15px 14px;
+  min-height: 268px;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 13.5px;
+  line-height: 1.72;
+  color: #9BE8B4;
+  margin-top: 13px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.fone-ecra .destaque { color: #FFF; font-weight: 500; }
+.fone-ecra .fraco { color: #4F8862; }
+
+.cursor {
+  display: inline-block;
+  width: 8px;
+  height: 15px;
+  background: #9BE8B4;
+  vertical-align: -2px;
+  animation: pisca 1.1s steps(2, start) infinite;
+}
+
+@keyframes pisca { to { visibility: hidden; } }
+
+.fone-teclas {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+  margin-top: 15px;
+}
+
+.tecla {
+  background: #1B1F25;
+  border: 1px solid #2A2E34;
+  border-radius: 6px;
+  color: #6B7580;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  text-align: center;
+  padding: 8px 0;
+}
+
+.fone-nota {
+  text-align: center;
+  font-family: 'Archivo', sans-serif;
+  font-size: 12.5px;
+  color: rgba(255,255,255,.5);
+  margin-top: 16px;
+}
+
+@media (max-width: 940px) {
+  .abertura-grelha { grid-template-columns: 1fr; gap: 46px; }
+  .abertura { padding: 54px 0 62px; }
+}
+
+
+/* ── o simulador ───────────────────────────────────────────────── */
+/* O TECLADO DEIXA DE SER DECORACAO. Um director provincial que
+   carrega nas teclas percebe em dez segundos o que tres paragrafos
+   nao explicam: que aquilo e simples e que funciona num Nokia. E
+   percebe sozinho, que e diferente de lhe dizerem. */
+.tecla {
+  cursor: pointer;
+  user-select: none;
+  transition: background .12s, color .12s, transform .08s;
+}
+
+.tecla:hover { background: #262C34; color: #9BE8B4; }
+
+/* O 00 ocupa a linha toda: e a saida de emergencia do menu, e uma
+   saida de emergencia procura-se com o polegar sem olhar. */
+.tecla-larga {
+  grid-column: 1 / -1;
+  border-color: rgba(151,188,98,.3);
+  color: #7FA98D;
+}
+
+.tecla-larga:hover { background: rgba(151,188,98,.16); color: #9BE8B4; }
+.tecla:active { transform: scale(.94); background: #2E8B57; color: #fff; }
+
+.fone-barra {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.fone-exp {
+  flex: 1;
+  border: 1px solid rgba(151,188,98,.4);
+  background: rgba(151,188,98,.12);
+  color: var(--musgo);
+  font-family: 'Archivo', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: background .16s, border-color .16s;
+}
+
+.fone-exp:hover { background: rgba(151,188,98,.22); border-color: var(--musgo); }
+
+.fone-exp.ligado {
+  background: var(--musgo);
+  border-color: var(--musgo);
+  color: #0A1F14;
+}
+
+.fone-nota { margin-top: 12px; }
+
+.fone-nota strong { color: var(--musgo); font-weight: 700; }
+
+/* ── barra de âncoras ──────────────────────────────────────────── */
+.tira {
+  background: var(--escuro);
+  border-top: 1px solid rgba(255,255,255,.08);
+  padding: 18px 0;
+}
+
+.tira-int {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 34px;
+  align-items: center;
+  font-family: 'Archivo', sans-serif;
+  font-size: 14px;
+}
+
+.tira-int span { color: rgba(255,255,255,.45); }
+
+.tira-int a {
+  color: rgba(255,255,255,.8);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(151,188,98,.35);
+  padding-bottom: 2px;
+}
+
+.tira-int a:hover { color: var(--musgo); border-bottom-color: var(--musgo); }
+
+/* ── secções ───────────────────────────────────────────────────── */
+.sec {
+  padding: 92px 0;
+  /* O cabecalho e fixo e tem 68px: sem esta folga, saltar por ancora
+     deixava o titulo da seccao escondido por baixo dele. */
+  scroll-margin-top: 78px;
+}
+.sec-creme { background: var(--creme); }
+.sec-escura { background: var(--floresta); color: #fff; }
+
+.sec-cab { max-width: 60ch; margin-bottom: 52px; }
+
+.sec-cab h2 {
+  font-size: clamp(29px, 3.6vw, 43px);
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.sec-escura .sec-cab h2 { color: #fff; }
+
+.sec-cab p {
+  font-size: 19px;
+  color: var(--sombra);
+  margin: 0;
+}
+
+.sec-escura .sec-cab p { color: rgba(255,255,255,.78); }
+
+/* uma barra dourada curta, so nos titulos de seccao: e o unico
+   ornamento que se repete, e marca o inicio de cada assunto */
+.sec-cab::before {
+  content: '';
+  display: block;
+  width: 46px;
+  height: 3px;
+  background: var(--ouro);
+  margin-bottom: 22px;
+}
+
+
+/* ── o problema ────────────────────────────────────────────────── */
+.problema-grelha {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 58px;
+  align-items: start;
+}
+
+.problema-texto p { font-size: 19px; }
+
+.problema-texto .remate {
+  font-size: 21px;
+  line-height: 1.5;
+  color: var(--floresta);
+  font-weight: 600;
+  border-left: 3px solid var(--ouro);
+  padding-left: 20px;
+  margin-top: 30px;
+}
+
+/* Uma lista de constatações, não cartões: cada uma é uma frase
+   curta com a explicação por baixo, separadas por uma linha. */
+.constata { border-top: 1px solid var(--linha); }
+
+.constata-item {
+  padding: 22px 0;
+  border-bottom: 1px solid var(--linha);
+}
+
+.constata-item h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--floresta);
+  margin-bottom: 6px;
+}
+
+.constata-item p {
+  font-size: 16.5px;
+  color: var(--sombra);
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .problema-grelha { grid-template-columns: 1fr; gap: 40px; }
+}
+
+/* ── os canais ─────────────────────────────────────────────────── */
+/* ASSIMETRICOS DE PROPOSITO: o USSD ocupa mais espaco porque e o
+   canal principal do produto. Tres caixas iguais diriam que os tres
+   pesam o mesmo, e nao pesam. */
+.canais {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 22px;
+  align-items: stretch;
+}
+
+.canal {
+  background: var(--papel);
+  border: 1px solid var(--linha);
+  border-radius: 14px;
+  padding: 30px 28px;
+  display: flex;
+  flex-direction: column;
+}
+
+.canal-principal {
+  background: var(--floresta);
+  border-color: var(--floresta);
+  color: #fff;
+}
+
+.canal-icone {
+  width: 42px; height: 42px;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  background: rgba(46,139,87,.12);
+  color: var(--folha);
+  margin-bottom: 20px;
+}
+
+.canal-principal .canal-icone {
+  background: rgba(255,255,255,.14);
+  color: var(--musgo);
+}
+
+.canal h3 {
+  font-size: 21px;
+  margin-bottom: 4px;
+}
+
+.canal-quem {
+  font-family: 'Archivo', sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--folha);
+  margin-bottom: 16px;
+}
+
+.canal-principal .canal-quem { color: var(--musgo); }
+
+.canal p {
+  font-size: 16.5px;
+  color: var(--sombra);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.canal-principal p { color: rgba(255,255,255,.84); }
+
+.canal ul {
+  list-style: none;
+  padding: 0;
+  margin: auto 0 0;
+  border-top: 1px solid var(--linha);
+  padding-top: 16px;
+}
+
+.canal-principal ul { border-top-color: rgba(255,255,255,.16); }
+
+.canal li {
+  font-family: 'Archivo', sans-serif;
+  font-size: 14px;
+  padding: 6px 0 6px 20px;
+  position: relative;
+  color: var(--sombra);
+}
+
+.canal-principal li { color: rgba(255,255,255,.76); }
+
+.canal li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 14px;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--musgo);
+}
+
+/* SEM O NUMERO GIGANTE que aqui estava. Um '1' ao lado do texto era
+   um numeral decorativo — o conteudo nao e uma sequencia, e o numero
+   nao dizia nada que a frase nao dissesse melhor. */
+.canal-nota {
+  background: var(--floresta);
+  color: #fff;
+  border-radius: 14px;
+  padding: 34px 38px;
+  margin-top: 22px;
+  border-left: 4px solid var(--ouro);
+}
+
+.canal-nota p {
+  margin: 0;
+  font-size: 19.5px;
+  line-height: 1.58;
+  color: rgba(255,255,255,.92);
+  max-width: 72ch;
+}
+
+@media (max-width: 980px) {
+  .canais { grid-template-columns: 1fr; }
+  .canal-nota { padding: 26px 24px; }
+}
+
+
+/* ── as delegações ─────────────────────────────────────────────── */
+.estado-grelha {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: start;
+}
+
+/* As regras do Estado sao PARES: a provincia faz, a central ve. A
+   grelha de duas colunas com uma linha de separacao diz isso sem
+   precisar de o escrever. */
+.regra {
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  gap: 16px;
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(255,255,255,.13);
+}
+
+.regra:last-child { border-bottom: 0; }
+
+.regra-marca {
+  width: 22px; height: 22px;
+  border-radius: 6px;
+  background: rgba(201,150,44,.18);
+  color: var(--ouro);
+  display: grid;
+  place-items: center;
+  margin-top: 3px;
+}
+
+.regra h3 {
+  font-size: 17.5px;
+  color: #fff;
+  margin-bottom: 5px;
+}
+
+.regra p {
+  font-size: 16.5px;
+  color: rgba(255,255,255,.74);
+  line-height: 1.58;
+  margin: 0;
+}
+
+.mapa-caixa {
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.13);
+  border-radius: 14px;
+  padding: 30px;
+}
+
+.mapa-caixa h3 {
+  font-size: 19px;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.mapa-caixa > p {
+  font-size: 16.5px;
+  color: rgba(255,255,255,.74);
+  margin-bottom: 22px;
+}
+
+.provincias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.prov {
+  font-family: 'Archivo', sans-serif;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: rgba(255,255,255,.86);
+  background: rgba(151,188,98,.13);
+  border: 1px solid rgba(151,188,98,.26);
+  border-radius: 6px;
+  padding: 7px 13px;
+}
+
+.prov-central {
+  background: rgba(201,150,44,.18);
+  border-color: rgba(201,150,44,.4);
+  color: #F0C765;
+}
+
+@media (max-width: 900px) { .estado-grelha { grid-template-columns: 1fr; gap: 40px; } }
+
+/* ── parceiros ─────────────────────────────────────────────────── */
+.parceiros {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+
+.parceiro {
+  background: var(--papel);
+  border: 1px solid var(--linha);
+  border-radius: 14px;
+  padding: 32px 30px;
+}
+
+.parceiro h3 { font-size: 21px; color: var(--floresta); margin-bottom: 12px; }
+
+.parceiro > p { font-size: 17px; color: var(--sombra); margin-bottom: 20px; }
+
+.passos-p { border-top: 1px solid var(--linha); }
+
+.passo-p {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 13px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--linha);
+  align-items: start;
+}
+
+.passo-p:last-child { border-bottom: 0; }
+
+.passo-p svg { color: var(--folha); margin-top: 3px; }
+
+.passo-p span {
+  font-family: 'Archivo', sans-serif;
+  font-size: 15px;
+  color: var(--tinta);
+  line-height: 1.5;
+}
+
+@media (max-width: 820px) { .parceiros { grid-template-columns: 1fr; } }
+
+/* ── o que muda ────────────────────────────────────────────────── */
+.muda {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 44px 56px;
+}
+
+.muda-item h3 {
+  font-size: 22px;
+  color: var(--floresta);
+  margin-bottom: 10px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--musgo);
+}
+
+.muda-item p { font-size: 17px; color: var(--sombra); margin: 0; }
+
+@media (max-width: 820px) { .muda { grid-template-columns: 1fr; gap: 34px; } }
+
+
+/* ── como se adere ─────────────────────────────────────────────── */
+/* AQUI OS NUMEROS SAO LEGITIMOS: aderir E uma sequencia, e a ordem
+   dos passos e a informacao. */
+.passos {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  counter-reset: passo;
+}
+
+.passo {
+  padding: 0 26px 0 0;
+  border-left: 2px solid var(--linha);
+  padding-left: 24px;
+  position: relative;
+}
+
+.passo:first-child { border-left-color: var(--ouro); }
+
+.passo-num {
+  font-family: 'Archivo', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ouro);
+  display: block;
+  margin-bottom: 10px;
+}
+
+.passo h3 {
+  font-size: 18.5px;
+  color: var(--floresta);
+  margin-bottom: 9px;
+}
+
+.passo p { font-size: 16px; color: var(--sombra); margin: 0; line-height: 1.56; }
+
+@media (max-width: 900px) {
+  .passos { grid-template-columns: 1fr 1fr; gap: 34px 0; }
+}
+@media (max-width: 560px) {
+  .passos { grid-template-columns: 1fr; gap: 30px; }
+}
+
+/* Uma coluna e nao duas: sobrou uma caixa so, e uma caixa a metade
+   da largura fica orfa ao lado de espaco vazio. */
+.registo-vias { margin-top: 46px; max-width: 78ch; }
+
+.via {
+  background: var(--creme);
+  border: 1px solid var(--linha);
+  border-radius: 13px;
+  padding: 26px 28px;
+}
+
+.via h4 {
+  font-size: 17px;
+  color: var(--floresta);
+  margin-bottom: 8px;
+}
+
+.via p { font-size: 16px; color: var(--sombra); margin: 0; }
+
+@media (max-width: 700px) { .registo-vias { grid-template-columns: 1fr; } }
+
+/* ── estado do projecto ────────────────────────────────────────── */
+.estado-hoje {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+
+.quadro {
+  border-radius: 14px;
+  padding: 32px 30px;
+}
+
+.quadro-feito { background: var(--floresta); color: #fff; }
+.quadro-falta { background: #FFF8E8; border: 1px solid #F0DFB8; }
+
+.quadro h3 { font-size: 20px; margin-bottom: 18px; }
+.quadro-feito h3 { color: var(--musgo); }
+.quadro-falta h3 { color: #8A6A15; }
+
+.quadro ul { list-style: none; padding: 0; margin: 0; }
+
+.quadro li {
+  font-size: 16.5px;
+  padding: 9px 0 9px 24px;
+  position: relative;
+  line-height: 1.5;
+}
+
+.quadro-feito li { color: rgba(255,255,255,.9); }
+.quadro-falta li { color: #6B5200; }
+
+.quadro li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 17px;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+}
+
+.quadro-feito li::before { background: var(--musgo); }
+.quadro-falta li::before { background: var(--ouro); }
+
+.quadro-nota {
+  font-size: 16px;
+  font-style: italic;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid #F0DFB8;
+  color: #8A6A15;
+}
+
+@media (max-width: 820px) { .estado-hoje { grid-template-columns: 1fr; } }
+
+/* ── contacto ──────────────────────────────────────────────────── */
+.contacto {
+  background:
+    radial-gradient(700px 420px at 15% 0%, rgba(46,139,87,.26), transparent 60%),
+    linear-gradient(160deg, var(--floresta), var(--escuro));
+  color: #fff;
+  padding: 88px 0;
+}
+
+.contacto-grelha {
+  display: grid;
+  grid-template-columns: 1.15fr .85fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.contacto h2 {
+  font-size: clamp(30px, 3.8vw, 44px);
+  font-weight: 800;
+  margin-bottom: 18px;
+}
+
+.contacto > .env > .contacto-grelha p {
+  font-size: 19px;
+  color: rgba(255,255,255,.84);
+  margin-bottom: 0;
+}
+
+.cartao {
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 15px;
+  padding: 30px;
+}
+
+.cartao-nome {
+  font-family: 'Archivo', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 3px;
+}
+
+.cartao-papel {
+  font-family: 'Archivo', sans-serif;
+  font-size: 14px;
+  color: var(--musgo);
+  margin-bottom: 22px;
+}
+
+.cartao-linha {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 0;
+  border-top: 1px solid rgba(255,255,255,.12);
+  font-family: 'Archivo', sans-serif;
+  font-size: 15.5px;
+}
+
+.cartao-linha svg { color: var(--musgo); flex: none; }
+.cartao-linha a { color: #fff; text-decoration: none; }
+.cartao-linha a:hover { color: var(--musgo); }
+
+@media (max-width: 900px) { .contacto-grelha { grid-template-columns: 1fr; gap: 38px; } }
+
+
+/* ── falar connosco ────────────────────────────────────────────── */
+/* WHATSAPP PRIMEIRO, e nao um formulario: em Mocambique e onde os
+   negocios acontecem. Um director provincial responde a um WhatsApp;
+   a um formulario talvez nunca chegue resposta. E nao precisa de
+   servidor — o link abre a conversa com a mensagem ja escrita. */
+/* EM PILHA E NAO EM TRES COLUNAS: a coluna esquerda tem metade da
+   largura, e tres botoes lado a lado partiam 'Resposta no mesmo dia'
+   em duas linhas. Um botao por linha le-se de uma vez. */
+.falar {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  margin-top: 30px;
+  max-width: 400px;
+}
+
+.falar-btn {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  text-decoration: none;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 12px;
+  padding: 17px 19px;
+  transition: background .16s, border-color .16s, transform .14s;
+}
+
+.falar-btn:hover {
+  background: rgba(255,255,255,.12);
+  border-color: var(--musgo);
+  transform: translateY(-1px);
+}
+
+.falar-zap { background: #1FA855; border-color: #1FA855; }
+.falar-zap:hover { background: #23BC60; border-color: #23BC60; }
+
+.falar-icone { flex: none; color: var(--musgo); }
+.falar-zap .falar-icone { color: #fff; }
+
+.falar-txt {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.falar-txt strong {
+  font-family: 'Archivo', sans-serif;
+  font-size: 15.5px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.falar-txt > span {
+  font-family: 'Archivo', sans-serif;
+  font-size: 13px;
+  color: rgba(255,255,255,.68);
+}
+
+.falar-zap .falar-txt > span { color: rgba(255,255,255,.85); }
+
+
+
+
+/* ── faixa de números ──────────────────────────────────────────── */
+/* NUMEROS QUE SAO VERDADE. Nao ha utilizadores — o piloto ainda nao
+   arrancou — mas ha coisas contaveis: as provincias, os canais, os
+   modulos. Um numero inventado desmonta-se a primeira pergunta; estes
+   aguentam qualquer sala. */
+.numeros {
+  background: var(--escuro);
+  border-top: 1px solid rgba(255,255,255,.08);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  padding: 44px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.numeros::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(680px 260px at 50% 0%, rgba(46,139,87,.18), transparent 70%);
+}
+
+.numeros-grelha {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+}
+
+.num-item {
+  padding-left: 22px;
+  border-left: 2px solid rgba(201,150,44,.42);
+}
+
+.num-val {
+  font-family: 'Archivo', sans-serif;
+  font-size: clamp(34px, 4vw, 46px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -.03em;
+  background: linear-gradient(140deg, #fff 8%, var(--musgo) 92%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 8px;
+}
+
+.num-rot {
+  font-family: 'Archivo', sans-serif;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 3px;
+}
+
+.num-sub {
+  font-family: 'Archivo', sans-serif;
+  font-size: 13px;
+  color: rgba(255,255,255,.56);
+  line-height: 1.45;
+}
+
+@media (max-width: 900px) { .numeros-grelha { grid-template-columns: 1fr 1fr; gap: 28px; } }
+@media (max-width: 520px) { .numeros-grelha { grid-template-columns: 1fr; } }
+
+/* ── textura nas secções escuras ───────────────────────────────── */
+.sec-escura {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(700px 460px at 88% 6%, rgba(46,139,87,.24), transparent 64%),
+    radial-gradient(560px 420px at 4% 96%, rgba(151,188,98,.12), transparent 62%),
+    linear-gradient(172deg, #16402A, var(--floresta) 55%, #0E2C1D);
+}
+
+.sec-escura::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(151,188,98,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(151,188,98,.05) 1px, transparent 1px);
+  background-size: 62px 62px;
+  mask-image: radial-gradient(800px 560px at 78% 30%, #000 10%, transparent 76%);
+  -webkit-mask-image: radial-gradient(800px 560px at 78% 30%, #000 10%, transparent 76%);
+  pointer-events: none;
+}
+
+.sec-escura > .env { position: relative; z-index: 1; }
+
+/* ── secções creme com textura ─────────────────────────────────── */
+.sec-creme {
+  position: relative;
+  background:
+    radial-gradient(760px 420px at 92% 0%, rgba(46,139,87,.07), transparent 62%),
+    var(--creme);
+}
+
+/* ── cartões com mais camada ───────────────────────────────────── */
+.canal {
+  box-shadow: 0 1px 2px rgba(18,53,36,.05), 0 12px 28px rgba(18,53,36,.05);
+  transition: transform .2s, box-shadow .2s;
+}
+
+.canal:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(18,53,36,.07), 0 20px 44px rgba(18,53,36,.11);
+}
+
+.canal-principal {
+  background:
+    radial-gradient(420px 300px at 100% 0%, rgba(46,139,87,.4), transparent 68%),
+    linear-gradient(160deg, #17402B, var(--floresta) 60%, #0E2C1D);
+  box-shadow: 0 18px 44px rgba(18,53,36,.24);
+}
+
+.canal-principal:hover { box-shadow: 0 26px 60px rgba(18,53,36,.3); }
+
+.canal-nota {
+  background:
+    radial-gradient(600px 300px at 90% 10%, rgba(46,139,87,.34), transparent 66%),
+    linear-gradient(150deg, #17402B, var(--floresta));
+  box-shadow: 0 16px 40px rgba(18,53,36,.2);
+}
+
+/* ── contacto com camadas ──────────────────────────────────────── */
+.contacto {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(680px 420px at 12% 4%, rgba(46,139,87,.3), transparent 62%),
+    radial-gradient(560px 460px at 92% 96%, rgba(201,150,44,.13), transparent 62%),
+    linear-gradient(158deg, #17402B, var(--floresta) 48%, var(--escuro));
+}
+
+.contacto::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(151,188,98,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(151,188,98,.05) 1px, transparent 1px);
+  background-size: 62px 62px;
+  mask-image: radial-gradient(760px 520px at 20% 50%, #000 8%, transparent 74%);
+  -webkit-mask-image: radial-gradient(760px 520px at 20% 50%, #000 8%, transparent 74%);
+  pointer-events: none;
+}
+
+.contacto > .env { position: relative; z-index: 1; }
+
+.cartao {
+  background:
+    linear-gradient(155deg, rgba(255,255,255,.1), rgba(255,255,255,.03));
+  box-shadow: 0 20px 48px rgba(0,0,0,.24);
+}
+
+/* ── quadro do estado com camada ───────────────────────────────── */
+.quadro-feito {
+  background:
+    radial-gradient(460px 280px at 92% 0%, rgba(46,139,87,.4), transparent 68%),
+    linear-gradient(158deg, #17402B, var(--floresta));
+  box-shadow: 0 16px 40px rgba(18,53,36,.2);
+}
+
+.mapa-caixa {
+  background: linear-gradient(155deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+  box-shadow: 0 14px 36px rgba(0,0,0,.18);
+}
+
+
+/* ── a grelha dos módulos, com resposta ao rato ────────────────── */
+/* A GRELHA FICA LISA EM REPOUSO: e um indice, e um indice com sombra
+   em cada celula le-se como nove anuncios. O relevo aparece so onde
+   o rato esta — movimento que responde a uma accao, nao decoracao. */
+.modulos { position: relative; }
+
+.modulo {
+  transition: background .2s, box-shadow .2s;
+  position: relative;
+}
+
+.modulo::after {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--folha);
+  opacity: 0;
+  transition: opacity .2s;
+}
+
+.modulo:hover {
+  background: linear-gradient(150deg, #FBFDFB, var(--creme));
+  box-shadow: 0 14px 34px rgba(18,53,36,.07);
+  z-index: 1;
+}
+
+.modulo:hover::after { opacity: 1; }
+
+.modulo:hover .modulo-cab svg { color: var(--ouro); }
+.modulo-cab svg { transition: color .2s; }
+
+/* ── as províncias reagem ──────────────────────────────────────── */
+.prov { transition: background .16s, border-color .16s, transform .16s; }
+
+.prov:hover {
+  background: rgba(151,188,98,.24);
+  border-color: var(--musgo);
+  transform: translateY(-1px);
+}
+
+/* ── os passos com barra que cresce ────────────────────────────── */
+.passo { transition: border-color .2s; }
+.passo:hover { border-left-color: var(--folha); }
+
+/* ── o botão do topo com brilho ────────────────────────────────── */
+.nav-cta {
+  box-shadow: 0 4px 14px rgba(201,150,44,.32);
+  transition: box-shadow .18s, transform .14s, background .16s;
+}
+
+.nav-cta:hover {
+  box-shadow: 0 6px 20px rgba(201,150,44,.45);
+  transform: translateY(-1px);
+}
+
+.btn-cheio { box-shadow: 0 6px 20px rgba(201,150,44,.3); }
+.btn-cheio:hover { box-shadow: 0 10px 28px rgba(201,150,44,.42); }
+
+/* ── o selo da abertura respira ────────────────────────────────── */
+.selo {
+  background: rgba(151,188,98,.08);
+  backdrop-filter: blur(4px);
+}
+
+
+
+/* ── quadros do estado com relevo ──────────────────────────────── */
+.quadro-falta {
+  background: linear-gradient(155deg, #FFFCF4, #FFF6E2);
+  box-shadow: 0 12px 32px rgba(138,106,21,.09);
+}
+
+/* ── parceiros com camada ──────────────────────────────────────── */
+.parceiro {
+  box-shadow: 0 1px 2px rgba(18,53,36,.04), 0 12px 30px rgba(18,53,36,.05);
+  transition: box-shadow .2s, transform .2s;
+}
+
+.parceiro:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(18,53,36,.06), 0 20px 46px rgba(18,53,36,.1);
+}
+
+/* ── o rodapé com uma linha de luz ─────────────────────────────── */
+.rodape {
+  position: relative;
+  background:
+    radial-gradient(700px 240px at 50% 0%, rgba(46,139,87,.14), transparent 70%),
+    var(--escuro);
+}
+
+.rodape::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent, rgba(151,188,98,.35) 30%, rgba(201,150,44,.3) 70%, transparent);
+}
+
+
+/* ── o logótipo ────────────────────────────────────────────────── */
+/* O SIMBOLO E O DO SPLASH DA APLICACAO, colado aqui em base64. Um
+   sitio que apresenta um produto com outro simbolo desalinha os dois
+   desde a primeira olhada — e eu desenhei tres folhas antes de
+   perceber que a certa ja existia no projecto.
+
+   Vai dentro do ficheiro e nao como imagem a parte: o sitio continua
+   a ser um so ficheiro, que abre com duplo clique. */
+.marca-folha {
+  width: 34px;
+  height: 34px;
+  flex: none;
+  border-radius: 9px;
+  display: block;
+  filter: drop-shadow(0 3px 10px rgba(46,139,87,.35));
+  transition: filter .34s cubic-bezier(.2,.8,.3,1),
+              transform .34s cubic-bezier(.2,.8,.3,1);
+}
+
+.marca-folha-peq { width: 28px; height: 28px; border-radius: 8px; }
+
+/* A folha volta-se para a luz: cresce, ganha halo dourado e balanca
+   uma vez, como se o vento passasse. Tres gestos pequenos que juntos
+   leem-se como um so. */
+.marca:hover .marca-folha,
+.rodape-marca:hover .marca-folha {
+  filter: drop-shadow(0 5px 18px rgba(201,150,44,.5)) saturate(1.25) brightness(1.1);
+  animation: vento 1.5s cubic-bezier(.36,.07,.19,.97);
+}
+
+@keyframes vento {
+  0%   { transform: scale(1.07) rotate(0deg); }
+  22%  { transform: scale(1.07) rotate(-5.5deg); }
+  48%  { transform: scale(1.07) rotate(3.8deg); }
+  72%  { transform: scale(1.07) rotate(-2deg); }
+  100% { transform: scale(1.07) rotate(0deg); }
+}
+
+.marca { transition: color .2s; }
+.marca:hover .marca-folha { transform: scale(1.07); }
+
+@media (prefers-reduced-motion: reduce) {
+  .marca:hover .marca-folha,
+  .rodape-marca:hover .marca-folha { animation: none; transform: none; }
+}
+
+/* ── rodapé ────────────────────────────────────────────────────── */
+/* O RODAPE E A ULTIMA COISA QUE SE VE, e num sitio institucional e
+   onde alguem procura o contacto depois de decidir. Merece o mesmo
+   cuidado da abertura: tres luzes, a malha, e uma linha de horizonte
+   dourada no topo.
+
+   A malha aqui aparece so na metade de baixo — le-se como o terreno
+   a fechar a pagina, e nao como padrao repetido. */
+.rodape {
+  position: relative;
+  overflow: hidden;
+  color: rgba(255,255,255,.62);
+  padding: 0;
+  font-family: 'Archivo', sans-serif;
+  font-size: 14.5px;
+  background:
+    radial-gradient(680px 320px at 18% 0%,  rgba(46,139,87,.22), transparent 64%),
+    radial-gradient(560px 380px at 88% 88%, rgba(151,188,98,.10), transparent 62%),
+    linear-gradient(178deg, #0F2A1C 0%, var(--escuro) 60%, #060F0A 100%);
+}
+
+.rodape::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(151,188,98,.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(151,188,98,.055) 1px, transparent 1px);
+  background-size: 54px 54px;
+  mask-image: linear-gradient(180deg, transparent 8%, #000 60%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 8%, #000 60%, transparent 100%);
+  pointer-events: none;
+}
+
+/* A linha de horizonte: dourada ao centro, a apagar-se nas pontas. */
+.rodape::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent, rgba(151,188,98,.4) 24%, rgba(201,150,44,.62) 52%,
+    rgba(151,188,98,.34) 76%, transparent);
+}
+
+.rodape > .env { position: relative; z-index: 1; }
+
+/* ── o corpo do rodapé, em quatro colunas ──────────────────────── */
+.rodape-corpo {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+  gap: 44px;
+  padding: 58px 0 44px;
+}
+
+.rodape-marca {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  color: #fff;
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: -.02em;
+  margin-bottom: 14px;
+  text-decoration: none;
+}
+
+.rodape-desc {
+  max-width: 34ch;
+  line-height: 1.62;
+  font-size: 14px;
+  color: rgba(255,255,255,.56);
+  margin-bottom: 20px;
+}
+
+/* O selo do estado do projecto: quem chega ao rodape ja leu a pagina,
+   e esta e a ultima nota honesta antes de sair. */
+.rodape-selo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--musgo);
+  background: rgba(151,188,98,.09);
+  border: 1px solid rgba(151,188,98,.22);
+  border-radius: 30px;
+  padding: 6px 14px 6px 10px;
+}
+
+.rodape-selo-ponto {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--musgo);
+  box-shadow: 0 0 0 3px rgba(151,188,98,.18);
+}
+
+.rodape-col h4 {
+  font-family: 'Archivo', sans-serif;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: rgba(255,255,255,.4);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin: 0 0 16px;
+}
+
+.rodape-col ul { list-style: none; padding: 0; margin: 0; }
+
+.rodape-col li { margin-bottom: 11px; }
+
+.rodape-col a {
+  color: rgba(255,255,255,.74);
+  text-decoration: none;
+  font-size: 14.5px;
+  transition: color .16s, padding-left .16s;
+  display: inline-block;
+}
+
+.rodape-col a:hover { color: var(--musgo); padding-left: 4px; }
+
+/* A REGRA DOS CONTACTOS VEM DEPOIS da '.rodape-col a', senao aquela
+   ganha por ordem de escrita e devolve o inline-block — foi o que
+   punha o WhatsApp e o email na mesma linha. */
+.rodape-col .rodape-cont { display: flex; padding-left: 0; }
+.rodape-col .rodape-cont:hover { padding-left: 4px; }
+
+/* CADA CONTACTO NA SUA LINHA: o inline-flex do 'a' deixava o WhatsApp
+   e o email lado a lado, e dois contactos na mesma linha leem-se como
+   um so. */
+.rodape-cont {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255,255,255,.74);
+  text-decoration: none;
+  font-size: 14.5px;
+  margin-bottom: 13px;
+  transition: color .16s;
+}
+
+.rodape-cont:hover { color: var(--musgo); }
+.rodape-cont svg { color: var(--folha); flex: none; }
+
+/* ── a barra de baixo ──────────────────────────────────────────── */
+.rodape-baixo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 30px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 0 34px;
+  border-top: 1px solid rgba(255,255,255,.08);
+  font-size: 13.5px;
+  color: rgba(255,255,255,.44);
+}
+
+.rodape-baixo a { color: rgba(255,255,255,.6); text-decoration: none; }
+.rodape-baixo a:hover { color: var(--musgo); }
+
+.rodape-xnae {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.rodape-xnae strong { color: rgba(255,255,255,.82); font-weight: 700; }
+
+@media (max-width: 940px) {
+  .rodape-corpo { grid-template-columns: 1fr 1fr; gap: 36px; }
+}
+
+@media (max-width: 560px) {
+  .rodape-corpo { grid-template-columns: 1fr; gap: 30px; padding: 44px 0 32px; }
+}
+
+/* ── o que o agricultor faz ────────────────────────────────────── */
+/* Um indice denso, e nao nove cartoes iguais: o que interessa e ver
+   a extensao do que o sistema cobre, numa vista so. */
+.modulos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--linha);
+  border-left: 1px solid var(--linha);
+}
+
+.modulo {
+  border-right: 1px solid var(--linha);
+  border-bottom: 1px solid var(--linha);
+  padding: 28px 26px;
+  background: var(--papel);
+}
+
+.modulo-cab {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 11px;
+}
+
+.modulo-cab svg { color: var(--folha); flex: none; }
+
+.modulo h3 {
+  font-size: 17.5px;
+  font-weight: 700;
+  color: var(--floresta);
+}
+
+.modulo p {
+  font-size: 16px;
+  color: var(--sombra);
+  line-height: 1.58;
+  margin: 0;
+}
+
+.modulo-marca {
+  display: inline-block;
+  font-family: 'Archivo', sans-serif;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #8A6A15;
+  background: #FFF4DE;
+  border-radius: 4px;
+  padding: 2px 8px;
+  margin-top: 12px;
+}
+
+@media (max-width: 900px) { .modulos { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 620px) { .modulos { grid-template-columns: 1fr; } }
+
+@media (max-width: 700px) {
+  .sec { padding: 62px 0; }
+  body { font-size: 17px; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ══ cabeçalho ══════════════════════════════════════════════ -->
+<header class="topo">
+  <div class="env topo-int">
+    <a class="marca" href="#inicio">
+      <img class="marca-folha" src="data:image/png;base64,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" alt="" width="34" height="34">
+      AgroMoz
+    </a>
+
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav">Menu</button>
+
+    <nav class="nav" id="nav" aria-label="Principal">
+      <a href="#canais">Canais</a>
+      <a href="#agricultor">Agricultor</a>
+      <a href="#estado">Delegações</a>
+      <a href="#parceiros">Fornecedores</a>
+      <a href="#registo">Como aderir</a>
+      <a class="nav-cta" href="#contacto">Falar connosco</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ══ abertura ═══════════════════════════════════════════════ -->
+<section class="abertura" id="inicio">
+  <div class="env abertura-grelha">
+
+    <div>
+      <span class="selo">
+        <svg class="selo-bandeira" viewBox="0 0 30 20" aria-hidden="true">
+          <rect width="30" height="6.2" y="0"    fill="#00A551"/>
+          <rect width="30" height="1.2" y="6.2"  fill="#fff"/>
+          <rect width="30" height="5.2" y="7.4"  fill="#000"/>
+          <rect width="30" height="1.2" y="12.6" fill="#fff"/>
+          <rect width="30" height="6.2" y="13.8" fill="#FCE100"/>
+          <path d="M0 0 L13 10 L0 20 Z" fill="#E31B23"/>
+          <path d="M4.6 6.4 l.85 2.6 h2.75 l-2.22 1.62 .85 2.6 -2.23-1.61
+                   -2.22 1.61 .85-2.6 -2.22-1.62 h2.74 z" fill="#FCE100"/>
+        </svg>
+        Construído em Moçambique
+      </span>
+
+      <h1>Do terreno ao mercado,
+        <span class="quebra">em qualquer telemóvel.</span></h1>
+
+      <p class="abertura-texto">O AgroMoz liga agricultores, extensionistas,
+      fornecedores e as delegações do sector agrário num só sistema. Funciona
+      no telemóvel de teclas, sem internet e sem aplicação — que é o telemóvel
+      que a maior parte dos agricultores moçambicanos tem no bolso.</p>
+
+      <div class="accoes">
+        <a class="btn btn-cheio" href="#canais">Ver como funciona</a>
+        <a class="btn btn-vazio" href="#registo">Como se adere</a>
+      </div>
+    </div>
+
+    <!-- O ecrã escreve-se sozinho uma vez, ao carregar. É o único
+         momento de movimento não pedido da página inteira. -->
+    <div class="fone-palco">
+     <div class="fone">
+      <div class="fone-ecra" id="ecra"></div>
+
+      <div class="fone-teclas" id="teclado">
+        <button class="tecla" data-t="1">1</button>
+        <button class="tecla" data-t="2">2</button>
+        <button class="tecla" data-t="3">3</button>
+        <button class="tecla" data-t="4">4</button>
+        <button class="tecla" data-t="5">5</button>
+        <button class="tecla" data-t="6">6</button>
+        <button class="tecla" data-t="7">7</button>
+        <button class="tecla" data-t="8">8</button>
+        <button class="tecla" data-t="9">9</button>
+        <button class="tecla" data-t="*">*</button>
+        <button class="tecla" data-t="0">0</button>
+        <button class="tecla" data-t="#">#</button>
+
+        <!-- O 00 TEM TECLA PROPRIA. Os ecras oferecem '00 Menu' e o
+             teclado nao o tinha: quem carregava duas vezes no zero
+             marcava dois zeros separados, e o simulador lia o primeiro
+             e ignorava o segundo. Num telemovel a serio marca-se
+             depressa e a rede junta-os; aqui e mais honesto ter a
+             tecla. -->
+        <button class="tecla tecla-larga" data-t="00">00</button>
+      </div>
+
+      <div class="fone-barra">
+        <button class="fone-exp" id="expBtn" type="button">
+          Experimente — carregue nas teclas
+        </button>
+      </div>
+
+      <p class="fone-nota" id="foneNota">Sessão real do menu do agricultor</p>
+     </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="tira">
+  <div class="env tira-int">
+    <span>Nesta página</span>
+    <a href="#canais">Os três canais</a>
+    <a href="#agricultor">O que o agricultor faz</a>
+    <a href="#estado">As delegações</a>
+    <a href="#registo">Como aderir</a>
+  </div>
+</div>
+
+
+<!-- ══ o que é contável ═══════════════════════════════════════ -->
+<section class="numeros" aria-label="O sistema em números">
+  <div class="env numeros-grelha">
+
+    <div class="num-item">
+      <div class="num-val">3</div>
+      <div class="num-rot">Canais ligados</div>
+      <div class="num-sub">Menu por código, aplicação e painel — sobre a mesma base</div>
+    </div>
+
+    <div class="num-item">
+      <div class="num-val">11</div>
+      <div class="num-rot">Províncias no desenho</div>
+      <div class="num-sub">Cada uma com os seus preços e as suas decisões</div>
+    </div>
+
+    <div class="num-item">
+      <div class="num-val">9</div>
+      <div class="num-rot">Módulos construídos</div>
+      <div class="num-sub">Do registo do plantio à rastreabilidade do lote</div>
+    </div>
+
+    <div class="num-item">
+      <div class="num-val">0 MB</div>
+      <div class="num-rot">Dados móveis exigidos</div>
+      <div class="num-sub">O canal principal funciona sem internet nenhuma</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ os três canais ═════════════════════════════════════════ -->
+<section class="sec sec-creme" id="canais">
+  <div class="env">
+    <div class="sec-cab">
+      <h2>Uma rede, não três aplicações</h2>
+      <p>Os três canais partilham a mesma base de dados e as mesmas regras. O
+      que a delegação decide de manhã, o agricultor vê no telemóvel à tarde —
+      mesmo sem internet.</p>
+    </div>
+
+    <div class="canais">
+
+      <article class="canal canal-principal">
+        <div class="canal-icone">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <rect x="7" y="2" width="10" height="20" rx="2"/>
+            <path d="M11 18h2"/>
+          </svg>
+        </div>
+
+        <h3>Menu por código</h3>
+        <p class="canal-quem">Para o agricultor, em qualquer telemóvel</p>
+
+        <p>Marca-se um código curto e o menu aparece. Não precisa de internet,
+        de aplicação, nem de carregar a bateria mais vezes. É o canal por onde
+        passa tudo o que é essencial — e o único que chega a toda a gente.</p>
+
+        <ul>
+          <li>Funciona em telemóvel de teclas</li>
+          <li>Sem dados móveis</li>
+          <li>Menus curtos, em português simples</li>
+          <li>A referência de pagamento vai por mensagem</li>
+        </ul>
+      </article>
+
+      <article class="canal">
+        <div class="canal-icone">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <rect x="4" y="3" width="16" height="18" rx="2"/>
+            <path d="M8 8h8M8 12h8M8 16h5"/>
+          </svg>
+        </div>
+
+        <h3>Aplicação</h3>
+        <p class="canal-quem">Para quem tem telefone com internet</p>
+
+        <p>Fichas de cultura completas, fotografias, relatórios em PDF e
+        conversa com o extensionista. Guarda o essencial no telefone, para
+        continuar a funcionar quando a rede falha.</p>
+
+        <ul>
+          <li>Fichas com fotografia e detalhe</li>
+          <li>Plano da parcela em PDF</li>
+          <li>Grupos por província</li>
+          <li>Trabalha sem rede e sincroniza depois</li>
+        </ul>
+      </article>
+
+      <article class="canal">
+        <div class="canal-icone">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M3 3v18h18"/>
+            <path d="M7 15l3-4 3 2 5-7"/>
+          </svg>
+        </div>
+
+        <h3>Painel das delegações</h3>
+        <p class="canal-quem">Para a central e as onze províncias</p>
+
+        <p>Onde o sector vê o que se passa no terreno e responde. Cada
+        delegação trabalha com os seus dados; a central acompanha as onze e
+        arbitra o que precisa de ser arbitrado.</p>
+
+        <ul>
+          <li>Verificação de fornecedores e transportadores</li>
+          <li>Alertas e comunicados</li>
+          <li>Preços definidos por província</li>
+          <li>Registo de quem decidiu o quê</li>
+        </ul>
+      </article>
+
+    </div>
+
+    <div class="canal-nota">
+      <p>Uma aplicação serve quem a instala. Uma rede liga pessoas que não se
+      conhecem — o agricultor de Homoine, o comprador de Maputo, o técnico que
+      os visita e a delegação que responde por eles. É por isso que os três
+      canais falam com a mesma base, e não há versão pobre nem versão rica do
+      sistema.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ o que o agricultor faz ═════════════════════════════════ -->
+<section class="sec" id="agricultor">
+  <div class="env">
+    <div class="sec-cab">
+      <h2>O que o agricultor consegue fazer</h2>
+      <p>Tudo o que se segue funciona no telemóvel de teclas. A aplicação
+      mostra o mesmo com mais detalhe, e os números são sempre os mesmos nos
+      dois canais.</p>
+    </div>
+
+    <div class="modulos">
+
+      <article class="modulo">
+        <div class="modulo-cab">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M12 22c5-2 8-6 8-12V5l-8-3-8 3v5c0 6 3 10 8 12z"/>
+          </svg>
+          <h3>Saber o que plantar</h3>
+        </div>
+        <p>Fichas de mais de vinte culturas moçambicanas, com ciclo,
+        necessidade de água, época de sementeira e risco — calculadas para a província de quem pergunta,
+        não em média nacional.</p>
+      </article>
+
+      <article class="modulo">
+        <div class="modulo-cab">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M4 20V8M10 20V4M16 20v-9M22 20H2"/>
+          </svg>
+          <h3>Estimar antes de gastar</h3>
+        </div>
+        <p>Quanto rende meio hectare de milho, quanta semente é precisa, e
+        entre que valores pode variar a colheita conforme a chuva. Em sacos
+        de 50 quilos, que é como se conta na machamba.</p>
+      </article>
+
+      <article class="modulo">
+        <div class="modulo-cab">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M12 3v18M5 10l7-7 7 7"/>
+          </svg>
+          <h3>Planear a parcela</h3>
+        </div>
+        <p>Diz-se o tamanho — em hectares, em metros quadrados ou pelos dois
+        lados do quintal — e o sistema propõe as culturas que dão bem naquela
+        província, ordenadas pelo que rende mais.</p>
+      </article>
+
+      <article class="modulo">
+        <div class="modulo-cab">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M12 2v6M12 22v-6M4.9 4.9l4.2 4.2M14.9 14.9l4.2 4.2"/>
+            <circle cx="12" cy="12" r="4"/>
+          </svg>
+          <h3>Ser acompanhado até colher</h3>
+        </div>
+        <p>Registado o plantio, o sistema sabe em que fase está a machamba e
+        avisa a cada etapa: sacha, adubação, praga da época. O extensionista
+        sabe quem visitar e porquê.</p>
+        <span class="modulo-marca">Serviço pago, com plano gratuito</span>
+      </article>
+
+      <article class="modulo">
+        <div class="modulo-cab">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M3 7h18l-1.5 12a2 2 0 01-2 2H6.5a2 2 0 01-2-2z"/>
+            <path d="M8 7V5a4 4 0 018 0v2"/>
+          </svg>
+          <h3>Vender no distrito</h3>
+        </div>
+        <p>Publica-se o molho de couve do quintal e os vizinhos recebem aviso
+        por mensagem. O ponto de encontro é escolhido por quem vende — a
+        morada de casa nunca é publicada.</p>
+      </article>
+
+      <article class="modulo">
+        <div class="modulo-cab">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M3 12h18M12 3a15 15 0 010 18 15 15 0 010-18"/>
+          </svg>
+          <h3>Vender em todo o país</h3>
+        </div>
+        <p>A tonelada de milho aparece a compradores de Maputo a Pemba. O
+        preço da publicação é definido pela delegação da província, que
+        conhece o que ali se pode pagar.</p>
+      </article>
+
+      <article class="modulo">
+        <div class="modulo-cab">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M3 17h2l2-5h10l2 5h2M6 17v2M18 17v2"/>
+            <path d="M5 12V7h9l4 5"/>
+          </svg>
+          <h3>Encontrar transporte</h3>
+        </div>
+        <p>Transportadores verificados pela delegação, com licença
+        acompanhada. Antes de a carga sair, a delegação de origem autoriza — e
+        numa viagem entre províncias, o destino fica a saber.</p>
+      </article>
+
+      <article class="modulo">
+        <div class="modulo-cab">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M20 16.5A4.5 4.5 0 0016 12h-1a6 6 0 10-11 3"/>
+            <path d="M8 19l2 3M13 19l2 3M18 19l2 3"/>
+          </svg>
+          <h3>Receber avisos de tempo</h3>
+        </div>
+        <p>Chuva forte ou praga na cultura dele. O aviso diz o que fazer, não
+        só que há perigo: «não aplique adubo antes da chuva, será arrastado» é
+        o que salva a campanha.</p>
+      </article>
+
+      <article class="modulo">
+        <div class="modulo-cab">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+          </svg>
+          <h3>Falar com quem sabe</h3>
+        </div>
+        <p>Um grupo por província, com os extensionistas da zona lá dentro. As
+        respostas do técnico aparecem marcadas, para se saber de quem vem o
+        conselho.</p>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ as delegações ══════════════════════════════════════════ -->
+<section class="sec sec-escura" id="estado">
+  <div class="env">
+    <div class="sec-cab">
+      <h2>Construído para o sector gerir</h2>
+      <p>O AgroMoz não é um sistema privado que o Estado consulta. É um sistema
+      que as delegações operam, com a estrutura do sector agrário dentro dele
+      desde o primeiro dia.</p>
+    </div>
+
+    <div class="estado-grelha">
+      <div>
+        <div class="regra">
+          <div class="regra-marca">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="3" stroke-linecap="round">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+          </div>
+          <div>
+            <h3>Cada província decide os seus preços</h3>
+            <p>O que serve Maputo é inalcançável em Niassa. Quem define é a
+            delegação que conhece os agricultores daquela terra — a central vê
+            as onze, é avisada de cada mudança, e não decide por elas.</p>
+          </div>
+        </div>
+
+        <div class="regra">
+          <div class="regra-marca">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="3" stroke-linecap="round">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+          </div>
+          <div>
+            <h3>Quem age fica com o nome</h3>
+            <p>Uma taxa perdoada, um preço aprovado, um lote verificado: fica
+            registado quem o fez e quando. Seis meses depois ainda há a quem
+            perguntar.</p>
+          </div>
+        </div>
+
+        <div class="regra">
+          <div class="regra-marca">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="3" stroke-linecap="round">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+          </div>
+          <div>
+            <h3>Alertas urgentes passam pela central</h3>
+            <p>A província emite os avisos correntes sozinha. Os urgentes vão a
+            anuência — um alerta errado a uma província inteira custa mais do
+            que a demora de uma hora.</p>
+          </div>
+        </div>
+
+        <div class="regra">
+          <div class="regra-marca">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="3" stroke-linecap="round">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+          </div>
+          <div>
+            <h3>Verificar deixa registo do que se viu</h3>
+            <p>Aprovar um fornecedor obriga a marcar que documentos se
+            conferiu. Não basta carregar em «aprovado» — a delegação está a
+            avalizar aquela loja perante os agricultores.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mapa-caixa">
+        <h3>Onze províncias, uma central</h3>
+        <p>Cada delegação provincial trabalha com os seus dados e não vê os das
+        outras. A delegação central acompanha as onze, arbitra o que precisa de
+        ser arbitrado e responde ao sector.</p>
+
+        <div class="provincias">
+          <span class="prov">Niassa</span>
+          <span class="prov">Cabo Delgado</span>
+          <span class="prov">Nampula</span>
+          <span class="prov">Zambézia</span>
+          <span class="prov">Tete</span>
+          <span class="prov">Manica</span>
+          <span class="prov">Sofala</span>
+          <span class="prov">Inhambane</span>
+          <span class="prov">Gaza</span>
+          <span class="prov">Maputo Província</span>
+          <span class="prov">Maputo Cidade</span>
+          <span class="prov prov-central">Delegação central</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ fornecedores e transportadores ═════════════════════════ -->
+<section class="sec" id="parceiros">
+  <div class="env">
+    <div class="sec-cab">
+      <h2>Para quem fornece e quem transporta</h2>
+      <p>O AgroMoz não vende insumos nem faz fretes. Aproxima quem precisa de
+      quem tem, e a delegação avaliza — porque um agricultor que compra semente
+      má perde a campanha inteira.</p>
+    </div>
+
+    <div class="parceiros">
+
+      <article class="parceiro">
+        <h3>Fornecedores de insumos</h3>
+        <p>Sementes, adubos, pesticidas, ferramentas e rações. O agricultor
+        procura por categoria e vê quem tem, na província dele, com o preço em
+        vigor e a unidade de venda.</p>
+
+        <div class="passos-p">
+          <div class="passo-p">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+            <span>Estar listado é gratuito — a licença já foi paga ao Estado</span>
+          </div>
+          <div class="passo-p">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+            <span>A delegação confere os documentos antes de aprovar</span>
+          </div>
+          <div class="passo-p">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+            <span>Actualizar um preço passa pela anuência da província</span>
+          </div>
+          <div class="passo-p">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+            <span>Os pedidos chegam por mensagem, com o contacto de quem pede</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="parceiro">
+        <h3>Transportadores</h3>
+        <p>Camião de carga, cisterna, refrigerado. O transportador declara à
+        entrada se serve apenas a sua província ou se está disposto a fazer
+        viagens entre províncias.</p>
+
+        <div class="passos-p">
+          <div class="passo-p">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+            <span>Licença e capacidade verificadas pela delegação</span>
+          </div>
+          <div class="passo-p">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+            <span>A carga só parte com autorização da delegação de origem</span>
+          </div>
+          <div class="passo-p">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+            <span>Entre províncias, o destino fica a saber da viagem</span>
+          </div>
+          <div class="passo-p">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+            <span>O preço do frete é acordado entre as partes, fora do sistema</span>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ como se adere ═══════════════════════════════════════ -->
+<section class="sec" id="registo">
+  <div class="env">
+    <div class="sec-cab">
+      <h2>Como um agricultor adere</h2>
+      <p>Sem documento, sem deslocação e sem pagar nada. O número de telemóvel
+      é a identidade — quem marca do seu cartão é o dono daquele cartão, e a
+      operadora já o confirmou.</p>
+    </div>
+
+    <div class="passos">
+      <div class="passo">
+        <span class="passo-num">Passo 1</span>
+        <h3>Marca o código</h3>
+        <p>Do telemóvel dele, como quem consulta o saldo. O menu aparece sem
+        instalar nada e sem gastar dados.</p>
+      </div>
+
+      <div class="passo">
+        <span class="passo-num">Passo 2</span>
+        <h3>Diz o nome e onde vive</h3>
+        <p>Província, distrito e localidade. É o que o sistema precisa para lhe
+        dar informação certa em vez de média nacional.</p>
+      </div>
+
+      <div class="passo">
+        <span class="passo-num">Passo 3</span>
+        <h3>Já pode usar</h3>
+        <p>A conta fica feita nesse momento. A delegação verifica depois — e a
+        verificação dá acesso a mais coisas, mas não trava o arranque.</p>
+      </div>
+    </div>
+
+    <div class="registo-vias">
+      <div class="via">
+        <h4>Fornecedores, transportadores e técnicos</h4>
+        <p>Os fornecedores e transportadores registam-se pelo mesmo processo, ou
+        são registados pela delegação numa visita — mas a aprovação exige
+        conferir documentos, e por isso é um segundo acto. As contas do sector
+        são criadas pelas delegações, para ficar registado quem tomou cada
+        decisão.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ onde estamos ═══════════════════════════════════════════ -->
+<section class="sec sec-creme" id="estado-hoje">
+  <div class="env">
+    <div class="sec-cab">
+      <h2>Onde o projecto está hoje</h2>
+      <p>Com franqueza, porque é a única forma de isto correr bem: o que está
+      construído e o que o piloto vem resolver.</p>
+    </div>
+
+    <div class="estado-hoje">
+
+      <div class="quadro quadro-feito">
+        <h3>Construído e a funcionar</h3>
+        <ul>
+          <li>Nove módulos, nos três canais</li>
+          <li>Fichas de culturas moçambicanas, ajustadas por província</li>
+          <li>Mercado distrital e nacional, com pagamento por referência</li>
+          <li>Acompanhamento de produção com planos e prestações</li>
+          <li>Extensão rural, com trabalho sem rede</li>
+          <li>Rastreabilidade de lotes com página pública</li>
+          <li>Meteorologia e alertas com anuência da central</li>
+          <li>Painel completo para a central e as onze províncias</li>
+        </ul>
+      </div>
+
+      <div class="quadro quadro-falta">
+        <h3>O que o piloto vem resolver</h3>
+        <ul>
+          <li>Os primeiros agricultores a usar, num distrito</li>
+          <li>O código de acesso atribuído com a operadora</li>
+          <li>O pagamento por carteira móvel ligado</li>
+          <li>As fichas validadas por agrónomos do sector</li>
+        </ul>
+
+        <p class="quadro-nota">Não apresentamos números de utilização porque
+        ainda não os temos. Apresentamos o sistema pronto para os produzir.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ contacto ═══════════════════════════════════════════════ -->
+<section class="contacto" id="contacto">
+  <div class="env contacto-grelha">
+
+    <div>
+      <h2>Feito em Moçambique, para Moçambique</h2>
+      <p>A XNAE é uma empresa moçambicana. O AgroMoz foi desenhado e escrito
+      aqui, com conhecimento das províncias, das operadoras e da forma como as
+      delegações trabalham. Não é um sistema estrangeiro traduzido — e isso
+      vê-se nas decisões: o telemóvel simples primeiro, o preço decidido pela
+      província, a morada da vendedora que nunca é publicada.</p>
+
+      <div class="falar">
+
+        <a class="falar-btn falar-zap"
+           href="https://wa.me/258842510516?text=Bom%20dia.%20Vi%20o%20AgroMoz%20e%20gostava%20de%20saber%20mais%20sobre%20o%20sistema."
+           target="_blank" rel="noopener">
+          <svg class="falar-icone" width="22" height="22" viewBox="0 0 24 24"
+               fill="currentColor" aria-hidden="true">
+            <path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2zm0 18.2a8.2
+                     8.2 0 01-4.2-1.1l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1112 20.2z"/>
+            <path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.2-.7.1-.2.3-.7 1-.9
+                     1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1
+                     -.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5 0-.2 0-.4 0-.5-.1-.2-.7
+                     -1.6-.9-2.2-.2-.5-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1
+                     2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5 4.4.7.3 1.2.5 1.7.6.7.2
+                     1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2
+                     -.6-.3z"/>
+          </svg>
+          <span class="falar-txt">
+            <strong>WhatsApp</strong>
+            <span>Resposta no mesmo dia</span>
+          </span>
+        </a>
+
+        <a class="falar-btn"
+           href="mailto:zandx@xnae.co.mz?subject=AgroMoz%20%E2%80%94%20pedido%20de%20informa%C3%A7%C3%A3o">
+          <svg class="falar-icone" width="22" height="22" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" aria-hidden="true">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <path d="M22 6l-10 7L2 6"/>
+          </svg>
+          <span class="falar-txt">
+            <strong>Email</strong>
+            <span>Para pedidos formais</span>
+          </span>
+        </a>
+
+        <a class="falar-btn" href="tel:+258842510516">
+          <svg class="falar-icone" width="22" height="22" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" aria-hidden="true">
+            <path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0
+                     01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3
+                     1.8.6 2.6a2 2 0 01-.5 2.1L8.1 9.5a16 16 0 006 6l1.1-1.1a2 2 0
+                     012.1-.5c.8.3 1.7.5 2.6.6a2 2 0 011.7 2z"/>
+          </svg>
+          <span class="falar-txt">
+            <strong>Telefone</strong>
+            <span>+258 84 251 0516</span>
+          </span>
+        </a>
+
+      </div>
+    </div>
+
+    <div class="cartao">
+      <div class="cartao-nome">XNAE</div>
+      <div class="cartao-papel">Consultoria em Engenharia Informática</div>
+
+      <div class="cartao-linha">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0
+                   01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3
+                   1.8.6 2.6a2 2 0 01-.5 2.1L8.1 9.5a16 16 0 006 6l1.1-1.1a2 2 0
+                   012.1-.5c.8.3 1.7.5 2.6.6a2 2 0 011.7 2z"/>
+        </svg>
+        <a href="tel:+258842510516">+258 84 251 0516</a>
+      </div>
+
+      <div class="cartao-linha">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <rect x="2" y="4" width="20" height="16" rx="2"/>
+          <path d="M22 6l-10 7L2 6"/>
+        </svg>
+        <a href="mailto:zandx@xnae.co.mz">zandx@xnae.co.mz</a>
+      </div>
+
+      <div class="cartao-linha">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M3 12h18M12 3a15 15 0 010 18 15 15 0 010-18"/>
+        </svg>
+        <a href="https://xnae-site-oficial.vercel.app" target="_blank" rel="noopener">xnae-site-oficial.vercel.app</a>
+      </div>
+
+      <div class="cartao-linha">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/>
+          <circle cx="12" cy="10" r="3"/>
+        </svg>
+        <span>Maputo, Moçambique</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ rodapé ═════════════════════════════════════════════════ -->
+<footer class="rodape">
+  <div class="env">
+
+    <div class="rodape-corpo">
+
+      <div>
+        <a class="rodape-marca" href="#inicio">
+          <img class="marca-folha marca-folha-peq" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAJw0lEQVR42u1dWWycVxX+zr3/P4uX8RJnX9okSuJupGGa0IRGkRqlEqjqE1ERhfKAZPGChIAnkIgi8QQSKo9FIKiQQkuACAmhhpI2LkpJlSZkwUnaOHFMnDqOl7HH4/HM/Pfew8P/j+sEe7yN4/kn91hjy5Zn7Dnnnu/s9wCWLFmytGREi/y6VCV84vu+ViAdgsA+OABEFR9YgYOQOARRrsNFC37+QQgchZl8OpKvt7k9b59uUsPcxNqEViBExABAsehI7aq6VPcb7bl7fuEg5P3v/cEJwP/juvjtiuee/JzW+QOseC8bfgyMFWCuB4UchhgMolEQ9RPRx3DwL7juP4be7ziDQED382KxBUABzOiDfzgo333t4le5oNvY8HMkSIABZgaYqwt8iEBEAAFsmEnQaREVv3afqP997y/PZgOe8Fy1geaMgYABgOV7Wl/QnvoJGDvBDDYMMCv/PwVVkQGerAsMMEAkSRBABAAXEXUOD526+uf7eVRuAQgAJtmWdG9cSP+UNH8XzGDNOngV+ZB5kAYMJkESRICkX/EjiR+kjp4dmYsQaC7MX/1isiXfN/IWQM+zp03wbIGHmwwAkBSCiT90EzVfu3vi0o3ZCoFmy/w1+3cuyw0PvQPQDlbGA8G1YdQ9pEgIhwVfdepjL/a/13F9NkIQsxAQJdva3PHhoT9Z5pckh7VRZKhVpfNvrtm/c1lgkEsecjmjq3kZOifSPyemly3zZzyuAoYVCVqncrnV423f+Qva22l+EBT4tsv2bn2es/oEK6NAkFXo3SyGv6RJCkkRemXwdOeRUlBEpaEnKbs+Sp1hYDsM64fQ05m/YSYSIL4Wb4ru/vTE1aHpcklimtMvAJjuS+mvgGg7tGX+nOMlw4YgtuRGzaulbMH0GsCM5uTmU2A8y4aNFcCcSYNIkMAluTn2xf6jlzMBv7m0BviZPl6xr/VJNtjFhmGZPy+SYAYMntK3zZ5JyDIDBJ30f6Zz+kskSILnl2SyBIBhIIjgqQMAgKOzsQHtvrU2Hu9lZjBAPCnLZB9zeJCfmGRtdu07tM8JPCEqJQACYJKvJ12waWXfdFi3cwHG2E8M86au033Lp7K7U3pBt/6abwbz8iClbAWwIBhigNGUGzPLpwyfp9AA1hlqZKCu6nL6Sxci1xgtGwMnBzg8gwYEZUR78ssoATZTl2aF5c1SR2yWrAAeZnJKtiJZG2w1wArA0hJBkMWfMpOyGmAhyNLsIYhD4gUR0UTDWijocDVpAAHK0zCaQSLo3bQQ9OCYb5RBoqUW8doocmN5eAUFonAJwgkr81kzojUR7P/mbghBuHXlDrou9KDv5iCEFHAiEkE51Qqg/PwnaGPQsLIeylNINNdh2+6N2PLMI7h19Q4unLiKod4RROMRv1XeQhDKW2g1BpGog5b1jbjd2QcIYHw0D6U0Hn1qLb787X3Y9oWNKOQ8VDoaTaMBhWIlpyK9Hq0UalvqsHbLStzu7AMbhgiOUi6bh5QSew8mUVMfw7/fuYxoTaRi4UiE1fg2r2lAbWMcXl5BK+PnDplBRDDGYDyTw44XHsem7etRGPdAgqwAyjkz2rgqASciYYyBVnoieCliPjOgPY2nDzyGSNyF0VYDylbklo5EXXNNUDQlKE9NCh4DIRDgFTwkWuqw8tFlUAVVkVoQOgGwYbhRB7G6iI9Iwg/GEEAQT9IEZoAEoWFFfcXagKmNcL5CCzIEGMOIRhy4URfGcND9VGR+0XEgEDjwI9hvbeIlfk+qWuKA4FSDqDiZCb93+LPRWKbiJ8Bog/RgpmKNcDgj4QnAx8SpnzyaHKTnIByBseFx3L05BMeVFRmUOaWGYit3WDf4CIztBP5PMJjAxiBa4+Ly+53IprOILHEsoKrCCAfwowoKquDPhDN/xvyiHTDawI05GLiVwuVT1+FGHRuIlTMS9nIKuUwezMaPgh0xwWCjDGREIpvO4dTRc9CeBglh21LKJgBB8AoeRgfH0Lgq4QtAChjja0A07iKfzeOfR84i3Z+BG3MrOisaznoAEwZ7hoP8PyCIAPbT04M9w3jvtx9i6NORimd+KL0gZoZ0BQa6U0gPZOBEHERqXOSzBXScvIarp27AaIYbc2w9YLEMsXAEsukcrp3uxurW5ei7MYALf/8Yg7eHEYm5cFwRCuaHuyDjaShipO5mcO5YB8gRE2lnDtFcQyiTcUXPp2lDI3o7+iBd4Z96bVBFzbmVW5BReYXmTc3Ij+aRS43DrZlkbEM21RParoiG9Q1IdaX8GCDEo1ShE4BWGvGmOLysh8ydDKQrQ93GKsIWBbNiJNYlMNo7OpETgu0NfTBkjEGkLgI37iLTNxr60x/C3lCC0QZ9HXdhOFxjnFQtcYBRDFYqlH2g1RGIUXXdnmAnZGAnZGAnZCzZgsxDikBWAywEWQFYqlQBWAuAsi8BmlEAHFzFPgJgDGEa/6zoK8s4C8bIrL2gui2rhoYGO/sBJPwSFOztWQuL3odlzO2frQaI7jfac0T0SRDyWx3Agu6QBhHdbG5G/1RwJKYVisQH7Lf+Mds7QOf9CFYefdT5dmd+0qKfkgLwK9tx9zgzm+DKekvzvzeUhXTenS4rPZ0AaMvnm89D4Fww52mvL543/OCKjsVO3XO4MfMGDdl7tlfFVzcxNL9UbLe3PJ2j60kkhOv8YvT89eNTwU+pOMAAoEhz3ZsgXAGRnMtuLEswAAQIN2RM/m4+gRgDEP3tlzMi5vwoKD5Zb2hupx/CdX6WOnvjv6VWmMgZojeRvztyJbY8sQFA0t+UZ6EIM+U9iRxy6FhDgn+c7knrheSCGAyS61Z9jwWdISKnxLSNJX9rhkMC/xH1td/vOd0zPlMqYtaL3Bp2bd1oRsb+xoZbYViBQjzgtzigoyDIgaAuEY+8nD7fdWY2i9zkLBNJIn97MBXbsuI48vpZAtaDJ/bokjW4YBBJkuKiiEdenS3z57IbxhdCT2ow+vTaYzTmrWTGjmCdqK6y9eVzZDwEBBE54o+ioeZb6bPXOxZjmee962wJSDyx4RUu6B+C+fHiHQ33CYOqMKXMEwc32C0Mok+EK15rahG/6W7vzi3mOtv7n8Or921tyQyMfx2e+QYb3kEEmiSM6iM/sgUzmCQukSPfIkccGbnQfXM+u4QXChuyeOKXvbSt3ruZ3wOl97PiZ5jNZjCaAa6tAk1ggMZAlCKBLhJ0TjjOyZh0PrhzvrN/EuPn1cawUOYUoWZC6sm2pNt9ZaxFZwstXjrbxAUOddxALrFTFxsWEWewPu4NBDDzf2hQ7p7R+QoCD0HKgiZtxOPFatotx2tSldZ2bUrGkiVL1UL/AxAEHZuKHtjmAAAAAElFTkSuQmCC" alt="" width="28" height="28">
+          AgroMoz
+        </a>
+
+        <p class="rodape-desc">A rede digital agronómica de Moçambique. Liga
+        agricultores, técnicos, fornecedores e as delegações do sector agrário
+        num só sistema — no telemóvel que cada um já tem.</p>
+
+        <span class="rodape-selo">
+          <span class="rodape-selo-ponto"></span>
+          Construído e a funcionar
+        </span>
+      </div>
+
+      <div class="rodape-col">
+        <h4>O sistema</h4>
+        <ul>
+          <li><a href="#canais">Os três canais</a></li>
+          <li><a href="#agricultor">Para o agricultor</a></li>
+          <li><a href="#estado">Para as delegações</a></li>
+          <li><a href="#parceiros">Fornecedores</a></li>
+          <li><a href="#parceiros">Transportadores</a></li>
+        </ul>
+      </div>
+
+      <div class="rodape-col">
+        <h4>Saber mais</h4>
+        <ul>
+          <li><a href="#registo">Como aderir</a></li>
+          <li><a href="#estado-hoje">Onde estamos</a></li>
+          <li><a href="#contacto">Quem construiu</a></li>
+        </ul>
+      </div>
+
+      <div class="rodape-col">
+        <h4>Falar connosco</h4>
+
+        <a class="rodape-cont"
+           href="https://wa.me/258842510516?text=Bom%20dia.%20Vi%20o%20AgroMoz%20e%20gostava%20de%20saber%20mais."
+           target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2zm0
+                     18.2a8.2 8.2 0 01-4.2-1.1l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2
+                     0 1112 20.2z"/>
+            <path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.2-.7.1-.2.3-.7
+                     1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8
+                     -1.7-2.1-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5 0-.2 0-.4
+                     0-.5-.1-.2-.7-1.6-.9-2.2-.2-.5-.5-.5-.7-.5h-.6c-.2 0-.5.1
+                     -.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5
+                     4.4.7.3 1.2.5 1.7.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.4.2
+                     -.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3z"/>
+          </svg>
+          WhatsApp
+        </a>
+
+        <a class="rodape-cont" href="mailto:zandx@xnae.co.mz">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <path d="M22 6l-10 7L2 6"/>
+          </svg>
+          zandx@xnae.co.mz
+        </a>
+
+        <a class="rodape-cont" href="tel:+258842510516">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5
+                     0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012
+                     1.7c.1.9.3 1.8.6 2.6a2 2 0 01-.5 2.1L8.1 9.5a16 16 0 006
+                     6l1.1-1.1a2 2 0 012.1-.5c.8.3 1.7.5 2.6.6a2 2 0 011.7 2z"/>
+          </svg>
+          +258 84 251 0516
+        </a>
+
+        <a class="rodape-cont" href="https://xnae-site-oficial.vercel.app"
+           target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M3 12h18M12 3a15 15 0 010 18 15 15 0 010-18"/>
+          </svg>
+          Site da XNAE
+        </a>
+
+        <a class="rodape-cont" href="#contacto">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+          Maputo, Moçambique
+        </a>
+      </div>
+
+    </div>
+
+    <div class="rodape-baixo">
+      <span class="rodape-xnae">
+        Desenvolvido pela
+        <a href="https://xnae-site-oficial.vercel.app" target="_blank"
+           rel="noopener"><strong>XNAE</strong></a> — Consultoria em Engenharia
+        Informática
+      </span>
+
+      <span>&copy; 2026 &middot; Todos os direitos reservados</span>
+    </div>
+
+  </div>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   O ecrã escreve-se sozinho, uma vez.
+
+   É uma sessão verdadeira: as opções, os preços e as unidades são
+   as que o sistema devolve. Um ecrã inventado seria a primeira
+   coisa que alguém do sector notaria.
+
+   Respeita quem pediu menos movimento — nesse caso mostra o ecrã
+   final de uma vez, porque o conteúdo é que importa, não a
+   animação.
+   ═══════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+
+  /* ═══════════════════════════════════════════════════════════════
+     O SIMULADOR
+
+     Comeca por se escrever sozinho, uma vez, para mostrar o que e.
+     Assim que alguem carrega numa tecla, passa a responder — e a
+     partir daí e a pessoa que conduz.
+
+     A ARVORE E A DO SISTEMA VERDADEIRO: os menus, os precos e as
+     unidades sao os que o AgroMoz devolve. Um simulador inventado
+     seria a primeira coisa que alguem do sector notaria — e o que
+     esta pagina tem a vender e precisamente que o sistema existe.
+
+     Corre inteiro dentro do ficheiro: nao chama servidor nenhum, nao
+     guarda nada, e nao ha nada por onde atacar.
+     ═══════════════════════════════════════════════════════════════ */
+
+  var ecra = document.getElementById('ecra');
+  var teclado = document.getElementById('teclado');
+  var expBtn = document.getElementById('expBtn');
+  var nota = document.getElementById('foneNota');
+
+  if (!ecra) return;
+
+  // ── a árvore de ecrãs ─────────────────────────────────────────
+  var M = {
+    inicio: {
+      txt: 'AgroMoz - Ola Daniela\n1. Culturas\n2. A minha producao\n3. Mercado\n' +
+           '4. Os meus produtos\n5. Suporte e mensagens\n6. O meu perfil\n' +
+           '7. Tempo e avisos\n0 Sair',
+      vai: { '1': 'culturas', '2': 'producao', '3': 'mercado', '4': 'produtos',
+             '5': 'suporte', '6': 'perfil', '7': 'tempo', '0': 'saiu' }
+    },
+
+    culturas: {
+      txt: 'Culturas - categoria (1/3)\n1. cereal\n2. horticola\n3. leguminosa\n' +
+           '4. tuberculo\n9 Seguinte\n0 Voltar  00 Menu',
+      vai: { '1': 'cereais', '2': 'cereais', '3': 'cereais', '4': 'cereais',
+             '9': 'culturas', '0': 'inicio' }
+    },
+
+    cereais: {
+      txt: 'Cultura (1/2)\n1. Milho\n2. Arroz\n3. Mapira\n4. Mexoeira\n' +
+           '9 Seguinte\n0 Voltar  00 Menu',
+      vai: { '1': 'milho', '2': 'milho', '3': 'milho', '4': 'milho',
+             '9': 'cereais', '0': 'culturas' }
+    },
+
+    milho: {
+      txt: 'Milho\nCiclo: 90-150 dias\nAgua: media a alta\nSemear: Out-Dez\n' +
+           'Niassa: aptidao alta\nMelhor em: Lichinga, Sanga\n0 Voltar  00 Menu',
+      vai: { '0': 'cereais' }
+    },
+
+    producao: {
+      txt: 'A minha producao\n1. Simular producao\n2. Planeador de parcela\n' +
+           '3. Registar plantio\n4. Os meus plantios\n5. Insumos\n0 Voltar  00 Menu',
+      vai: { '1': 'simArea', '2': 'planArea', '3': 'plCat', '4': 'meusPl',
+             '5': 'insumos', '0': 'inicio' }
+    },
+
+    simArea: {
+      txt: 'Simular - area\nTamanho da parcela?\nHectares: 0,5 ou 200\n' +
+           'Quintal: 200m ou 10x10\n\n(escreva no teclado)\n0 Voltar  00 Menu',
+      vai: { '1': 'simRes', '2': 'simRes', '3': 'simRes', '4': 'simRes',
+             '5': 'simRes', '0': 'producao' }
+    },
+
+    simRes: {
+      txt: 'Milho - 1 ha\nsequeiro\nEsperado: 48 sacos (2,4t)\n' +
+           'Entre 18 e 132 sacos.\nSemente: 22 kg\n1. Ver detalhe\n0 Voltar  00 Menu',
+      vai: { '1': 'simDet', '0': 'producao' }
+    },
+
+    simDet: {
+      txt: 'Milho - 1 ha (2/2)\nNiassa: aptidao alta\nMelhor em: Lichinga, Sanga\n' +
+           'Estimativa. Depende da chuva,\nda praga e da variedade.\n0 Voltar  00 Menu',
+      vai: { '0': 'simRes' }
+    },
+
+    planArea: {
+      txt: 'Planeador 1 de 3 - area\nTamanho da parcela?\nHectares: 0,5 ou 200\n' +
+           'Quintal: 200m ou 10x10\n0 Voltar  00 Menu',
+      vai: { '1': 'planIrr', '2': 'planIrr', '3': 'planIrr', '4': 'planIrr',
+             '5': 'planIrr', '0': 'producao' }
+    },
+
+    planIrr: {
+      txt: 'Planeador 2 de 3\ntem irrigacao?\n1. Sim\n2. Nao\n0 Voltar  00 Menu',
+      vai: { '1': 'planFim', '2': 'planFim', '0': 'planArea' }
+    },
+
+    planFim: {
+      txt: 'Planeador 3 de 3\npara que e?\n1. Comer e vender\n2. Alimentar o gado\n' +
+           '0 Voltar  00 Menu',
+      vai: { '1': 'planRes', '2': 'planGado', '0': 'planIrr' }
+    },
+
+    planRes: {
+      txt: 'Parcela 1 ha - sequeiro (1/3)\n1. Mandioca ~360 sacos\n' +
+           '2. Milho ~48 sacos\n3. Feijao ~24 sacos\n4. Amendoim ~20 sacos\n' +
+           '9 Seguinte\n0 Voltar  00 Menu',
+      vai: { '1': 'planDet', '2': 'planDet', '3': 'planDet', '4': 'planDet',
+             '9': 'planRes', '0': 'planFim' }
+    },
+
+    planGado: {
+      txt: 'Parcela 1 ha - sequeiro\n1. Capim-elefante 32t\n2. Aveia-forrageira 16t\n' +
+           '0 Voltar  00 Menu',
+      vai: { '1': 'planDet', '2': 'planDet', '0': 'planFim' }
+    },
+
+    planDet: {
+      txt: 'Mandioca\nArea: 1 ha\nAptidao: adequada\nEsperado: 360 sacos (18t)\n' +
+           '1. Registar plantio desta\n0 Voltar  00 Menu',
+      vai: { '1': 'plCat', '0': 'planRes' }
+    },
+
+    plCat: {
+      txt: 'Plantio 1 de 3 - categoria (1/3)\n1. cereal\n2. horticola\n' +
+           '3. leguminosa\n4. tuberculo\n9 Seguinte\n0 Voltar  00 Menu',
+      vai: { '1': 'plCult', '2': 'plCult', '3': 'plCult', '4': 'plCult',
+             '9': 'plCat', '0': 'producao' }
+    },
+
+    plCult: {
+      txt: 'Plantio 2 de 3 - cultura (1/2)\n1. Milho\n2. Arroz\n3. Mapira\n' +
+           '4. Mexoeira\n9 Seguinte\n0 Voltar  00 Menu',
+      vai: { '1': 'plData', '2': 'plData', '3': 'plData', '4': 'plData',
+             '9': 'plCult', '0': 'plCat' }
+    },
+
+    plData: {
+      txt: 'Plantio 3 de 3\nquando semeou?\n1. Hoje\n2. Ha uma semana\n' +
+           '3. Ha duas semanas\n4. Outra data\n0 Voltar  00 Menu',
+      vai: { '1': 'plArea', '2': 'plArea', '3': 'plArea', '4': 'plArea',
+             '0': 'plCult' }
+    },
+
+    plArea: {
+      txt: 'Que tamanho tem\n1. Um quintal (menos de 1/4 ha)\n2. Meio hectare\n' +
+           '3. Um hectare\n4. Dois a cinco hectares\n5. Mais de cinco\n' +
+           '0 Voltar  00 Menu',
+      vai: { '1': 'plPlano', '2': 'plPlano', '3': 'plPlano', '4': 'plPlano',
+             '5': 'plPlano', '0': 'plData' }
+    },
+
+    plPlano: {
+      txt: 'Ate onde quer ser acompanhado\n1. Arranque (gratis)\n' +
+           '2. Meia-estacao - 126MT\n3. Ciclo completo - 217MT\n' +
+           '4. Ciclo completo + Tecnico - 493MT\n0 Voltar  00 Menu',
+      vai: { '1': 'plConfG', '2': 'plConf', '3': 'plConf', '4': 'plConf',
+             '0': 'plArea' }
+    },
+
+    plConf: {
+      txt: 'Confirmar plantio\nMilho\nSementeira: hoje\nArea: 1 ha\n' +
+           'Meia-estacao: 126MT\nPaga em 2 prestacoes.\n1. Registar\n' +
+           '0 Voltar  00 Menu',
+      vai: { '1': 'plFeito', '0': 'plPlano' }
+    },
+
+    plConfG: {
+      txt: 'Confirmar plantio\nMilho\nSementeira: hoje\nArea: 1 ha\n' +
+           'Arranque (sem custo)\n1. Registar\n0 Voltar  00 Menu',
+      vai: { '1': 'plFeitoG', '0': 'plPlano' }
+    },
+
+    plFeito: {
+      txt: 'Plantio registado\nMilho\nEnviamos 2 referencia(s) por SMS.\n' +
+           '1. Registar outro\n2. Menu principal\n0 Sair',
+      vai: { '1': 'plCat', '2': 'inicio', '0': 'saiu' }
+    },
+
+    plFeitoG: {
+      txt: 'Plantio registado\nMilho\n12 avisos guardados.\n' +
+           'Marque o codigo para os ver.\n1. Registar outro\n2. Menu principal\n0 Sair',
+      vai: { '1': 'plCat', '2': 'inicio', '0': 'saiu' }
+    },
+
+    meusPl: {
+      txt: 'Os meus plantios\n1. Milho 28/08\n2. Mandioca 12/07\n0 Voltar  00 Menu',
+      vai: { '1': 'plDetalhe', '2': 'plDetalhe', '0': 'producao' }
+    },
+
+    plDetalhe: {
+      txt: 'Milho\nSementeira: 28/08/2026\nHa 8 dia(s)\nCiclo: 90-150 dias\n' +
+           '1. Ver avisos (2)\n0 Voltar  00 Menu',
+      vai: { '1': 'plAvisos', '0': 'meusPl' }
+    },
+
+    plAvisos: {
+      txt: 'Avisos - Milho\n1. Sementeira (ha 8 dias)\n2. Adubacao: fundo (ha 8 dias)\n' +
+           '0 Voltar  00 Menu',
+      vai: { '1': 'plAviso1', '2': 'plAviso1', '0': 'plDetalhe' }
+    },
+
+    plAviso1: {
+      txt: 'Adubacao: fundo\nAplique NPK 12-24-12 na\nlinha de sementeira, antes\n' +
+           'de tapar. Nao aplique se\nesperar chuva forte.\n0 Voltar  00 Menu',
+      vai: { '0': 'plAvisos' }
+    },
+
+    insumos: {
+      txt: 'Insumos\n1. Sementes\n2. Adubos e fertilizantes\n3. Pesticidas\n' +
+           '4. Ferramentas\n5. Racoes\n7. Os meus pedidos\n0 Voltar  00 Menu',
+      vai: { '1': 'insLista', '2': 'insLista', '3': 'insLista', '4': 'insLista',
+             '5': 'insLista', '7': 'insPed', '0': 'producao' }
+    },
+
+    insLista: {
+      txt: 'Sementes - Niassa\n1. Milho ZM523 560MT\n   saco 10kg\n' +
+           '2. Feijao manteiga 340MT\n   saco 5kg\n0 Voltar  00 Menu',
+      vai: { '1': 'insDet', '2': 'insDet', '0': 'insumos' }
+    },
+
+    insDet: {
+      txt: 'Semente de milho ZM523\n560 MZN / saco 10kg\nSementes do Niassa, Lda\n' +
+           'Cuamba - verificado\n1. Pedir\n0 Voltar  00 Menu',
+      vai: { '1': 'insPedido', '0': 'insLista' }
+    },
+
+    insPedido: {
+      txt: 'Pedido enviado\nO fornecedor recebe o seu\ncontacto e responde.\n' +
+           '1. Ver outros insumos\n2. Menu principal\n0 Sair',
+      vai: { '1': 'insumos', '2': 'inicio', '0': 'saiu' }
+    },
+
+    insPed: {
+      txt: 'Os meus pedidos\n1. Milho ZM523 - aceite\n2. Feijao - a aguardar\n' +
+           '0 Voltar  00 Menu',
+      vai: { '1': 'insPedDet', '2': 'insPedDet', '0': 'insumos' }
+    },
+
+    insPedDet: {
+      txt: 'Milho ZM523\nAceite pelo fornecedor\nSementes do Niassa, Lda\n' +
+           '84 250 1188\nCuamba, Av. E. Mondlane\n0 Voltar  00 Menu',
+      vai: { '0': 'insPed' }
+    },
+
+    mercado: {
+      txt: 'Mercado\n1. Vender perto de mim\n2. Vender em todo o pais\n' +
+           '3. Quanto custa publicar\n4. Ver o que ha a venda\n0 Voltar  00 Menu',
+      vai: { '1': 'mercLocal', '2': 'mercNac', '3': 'mercPrec', '4': 'mercVer',
+             '0': 'inicio' }
+    },
+
+    mercPrec: {
+      txt: 'Quanto custa publicar\nPerto de mim (meu distrito)\n7 dias: 25MT\n---\n' +
+           'Em todo o pais\n7 dias: 80MT\n1. Publicar agora\n0 Voltar  00 Menu',
+      vai: { '1': 'mercLocal', '0': 'mercado' }
+    },
+
+    mercLocal: {
+      txt: 'Vender no distrito\nQue produto?\n1. Hortalicas\n2. Cereais\n' +
+           '3. Fruta\n4. Outro\n0 Voltar  00 Menu',
+      vai: { '1': 'mercPub', '2': 'mercPub', '3': 'mercPub', '4': 'mercPub',
+             '0': 'mercado' }
+    },
+
+    mercNac: {
+      txt: 'Vender em todo o pais\nQue produto?\n1. Milho\n2. Feijao\n' +
+           '3. Mandioca\n4. Outro\n0 Voltar  00 Menu',
+      vai: { '1': 'mercPub', '2': 'mercPub', '3': 'mercPub', '4': 'mercPub',
+             '0': 'mercado' }
+    },
+
+    mercPub: {
+      txt: 'Publicacao registada\nRef: AGM-7F2A91C4\n25 MZN a pagar\n' +
+           'A referencia vai tambem\npor SMS.\n1. Menu principal\n0 Sair',
+      vai: { '1': 'inicio', '0': 'saiu' }
+    },
+
+    mercVer: {
+      txt: 'A venda perto de si\n1. Couve 15MT/molho\n   Cuamba-Mepica\n' +
+           '2. Tomate 40MT/kg\n   Cuamba-Sede\n0 Voltar  00 Menu',
+      vai: { '1': 'mercVerDet', '2': 'mercVerDet', '0': 'mercado' }
+    },
+
+    mercVerDet: {
+      txt: 'Couve\n15 MZN por molho\nCuamba-Mepica\nPonto: mercado de Mepica\n' +
+           '1. Contactar vendedor\n0 Voltar  00 Menu',
+      vai: { '1': 'mercCont', '0': 'mercVer' }
+    },
+
+    mercCont: {
+      txt: 'Pedido enviado\nA vendedora recebe o seu\ncontacto e responde.\n' +
+           '1. Voltar ao mercado\n0 Sair',
+      vai: { '1': 'mercado', '0': 'saiu' }
+    },
+
+    produtos: {
+      txt: 'Os meus produtos\n1. Couve - a venda (3 dias)\n2. Milho - vendido\n' +
+           '0 Voltar  00 Menu',
+      vai: { '1': 'prodDet', '2': 'prodDet', '0': 'inicio' }
+    },
+
+    prodDet: {
+      txt: 'Couve\n15 MZN por molho\nA venda ha 3 dias\n2 pessoas perguntaram\n' +
+           '1. Ver interessados\n0 Voltar  00 Menu',
+      vai: { '1': 'produtos', '0': 'produtos' }
+    },
+
+    suporte: {
+      txt: 'Suporte e mensagens\n1. Falar com a delegacao\n2. Comunidade\n' +
+           '3. As minhas mensagens\n0 Voltar  00 Menu',
+      vai: { '1': 'supDel', '2': 'supCom', '3': 'supMsg', '0': 'inicio' }
+    },
+
+    supDel: {
+      txt: 'Delegacao de Niassa\nEscreva a sua duvida.\nUm tecnico responde.\n' +
+           '(escreva no teclado)\n0 Voltar  00 Menu',
+      vai: { '0': 'suporte' }
+    },
+
+    supCom: {
+      txt: 'Comunidade de Niassa\n1. Praga no milho? (tecnico)\n' +
+           '2. Preco do feijao em Cuamba\n0 Voltar  00 Menu',
+      vai: { '1': 'supCom', '2': 'supCom', '0': 'suporte' }
+    },
+
+    supMsg: {
+      txt: 'As minhas mensagens\nNao tem mensagens novas.\n0 Voltar  00 Menu',
+      vai: { '0': 'suporte' }
+    },
+
+    perfil: {
+      txt: 'O meu perfil\nNome: Daniela Zandamela\nProv: Niassa\n' +
+           'Dist: Cuamba, Mepica\n1. Nome\n2. Provincia\n3. Distrito\n' +
+           '4. Localidade\n5. O que devo\n0 Voltar  00 Menu',
+      vai: { '1': 'perfil', '2': 'perfil', '3': 'perfil', '4': 'perfil',
+             '5': 'devo', '0': 'inicio' }
+    },
+
+    devo: {
+      txt: 'O que devo\nTotal: 450 MZN\nPagar primeiro:\nAGM-B4D8E205-1\n' +
+           'Plano 1/2 - 300MT (venceu ha 20d)\n1. Pagar 300MT agora\n' +
+           '2. Ver as 2 dividas\n0 Voltar  00 Menu',
+      vai: { '1': 'devoPag', '2': 'devoTodas', '0': 'perfil' }
+    },
+
+    devoPag: {
+      txt: 'Pagamento por telemovel\nAinda nao esta disponivel.\n' +
+           'Pague na delegacao com a\nreferencia AGM-B4D8E205-1.\n' +
+           '1. Voltar as dividas\n0 Sair',
+      vai: { '1': 'devo', '0': 'saiu' }
+    },
+
+    devoTodas: {
+      txt: 'As minhas dividas\nAGM-7F2A91C4 150MT\nAGM-B4D8E205-1 300MT !\n' +
+           '1. Ver o resumo\n0 Voltar  00 Menu',
+      vai: { '1': 'devo', '0': 'perfil' }
+    },
+
+    tempo: {
+      txt: 'Tempo e avisos\n1. Previsao para Cuamba\n2. Avisos em vigor\n' +
+           '0 Voltar  00 Menu',
+      vai: { '1': 'tempoPrev', '2': 'tempoAv', '0': 'inicio' }
+    },
+
+    tempoPrev: {
+      /* SEM PREVISAO INVENTADA. O sistema verdadeiro le a previsao de
+         uma fonte meteorologica; aqui nao ha fonte nenhuma, e '31C em
+         Cuamba' seria um numero que alguem de Cuamba olha e ve que
+         esta errado — no meio de uma pagina construida sobre nao
+         inventar numeros.
+
+         O ecra diz o que o sistema FAZ, que e o que interessa mostrar. */
+      txt: 'Previsao para Cuamba\nO sistema mostra aqui a\n' +
+           'previsao dos proximos dias\npara o distrito do agricultor.\n\n' +
+           '(no simulador nao ha ligacao\na fonte meteorologica)\n0 Voltar  00 Menu',
+      vai: { '0': 'tempo' }
+    },
+
+    tempoAv: {
+      /* O AVISO E UM EXEMPLO DO FORMATO, e nao um aviso a serio: sem
+         dias nem datas, para ninguem o confundir com um alerta em
+         vigor. O que se quer mostrar e que o aviso diz O QUE FAZER, e
+         nao so que ha perigo — que e a diferenca entre um alerta util
+         e um alerta que se ignora. */
+      txt: 'Exemplo de aviso\n\n"Chuva forte prevista.\n' +
+           'Nao aplique adubo antes da\nchuva - sera arrastado.\n' +
+           'Colha o que estiver pronto."\n0 Voltar  00 Menu',
+      vai: { '0': 'tempo' }
+    },
+
+    saiu: {
+      txt: 'Obrigado por usar o AgroMoz.\n\nEsta foi uma simulacao.\n' +
+           'O sistema verdadeiro corre\nno telemovel do agricultor.\n\n' +
+           '1. Comecar de novo',
+      vai: { '1': 'inicio' }
+    }
+  };
+
+  // ── a demonstração que se escreve sozinha ─────────────────────
+  var demo = ['inicio', 'producao', 'plArea', 'plPlano', 'plFeito'];
+
+  var reduzido = window.matchMedia
+    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var aqui = 'inicio';
+  var vivo = false;      // true assim que a pessoa carrega numa tecla
+  var tarefa = null;
+
+  function pintar(txt, cursor) {
+    var seguro = txt
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+    var linhas = seguro.split('\n').map(function (l, i) {
+      if (i === 0) return '<span class="destaque">' + l + '</span>';
+      if (/^0|^00/.test(l)) return '<span class="fraco">' + l + '</span>';
+      return l;
+    });
+
+    ecra.innerHTML = linhas.join('\n') + (cursor ? '<span class="cursor"></span>' : '');
+  }
+
+  function mostrar(chave, escrever) {
+    var m = M[chave];
+    if (!m) return;
+
+    aqui = chave;
+
+    if (!escrever) { pintar(m.txt, true); return; }
+
+    var i = 0;
+
+    (function passo() {
+      pintar(m.txt.slice(0, i), true);
+
+      if (i < m.txt.length) {
+        i += 2;
+        tarefa = setTimeout(passo, 11);
+        return;
+      }
+
+      pintar(m.txt, true);
+    })();
+  }
+
+  // ── a pessoa carrega numa tecla ───────────────────────────────
+  function marcar(t) {
+    if (!vivo) {
+      vivo = true;
+      clearTimeout(tarefa);
+
+      if (expBtn) {
+        expBtn.textContent = 'Está a usar o simulador';
+        expBtn.classList.add('ligado');
+      }
+
+      if (nota) {
+        nota.innerHTML = '<strong>Simulação</strong> — os menus são os do sistema verdadeiro';
+      }
+
+      /* O PRIMEIRO TOQUE COMECA DO MENU, seja qual for o ecra onde a
+         demonstracao ia. Sem isto, quem carrega numa tecla enquanto a
+         demo corre entra a meio de um fluxo que nao escolheu — e a
+         primeira impressao do simulador e de confusao. */
+      aqui = 'inicio';
+      mostrar('inicio', false);
+
+      if (t === '__') return;   // veio do botão: fica no menu
+    }
+
+    var m = M[aqui];
+    if (!m) return;
+
+    /* O '00' VOLTA AO MENU, como no sistema. Sem isso quem se perde
+       fica preso, e um simulador em que a pessoa se perde prova o
+       contrário do que a página quer provar. */
+    /* O 00 VOLTA AO MENU DE QUALQUER SITIO, como no sistema — nao
+       precisa de estar declarado em cada ecra. Quem se perde tem
+       sempre uma saida, e um simulador em que a pessoa se perde prova
+       o contrario do que a pagina quer provar. */
+    if (t === '00') { mostrar('inicio', false); return; }
+
+    var destino = m.vai && m.vai[t];
+
+    if (!destino) {
+      // tecla sem função neste ecrã: diz-se, como o sistema diz
+      pintar('Nao percebi.\n' + m.txt, true);
+      return;
+    }
+
+    mostrar(destino, false);
+  }
+
+  if (teclado) {
+    teclado.addEventListener('click', function (e) {
+      var b = e.target.closest('.tecla');
+      if (b) marcar(b.getAttribute('data-t'));
+    });
+  }
+
+  if (expBtn) {
+    expBtn.addEventListener('click', function () {
+      if (!vivo) { marcar('__'); mostrar('inicio', false); }
+      else { vivo = false; aqui = 'inicio'; mostrar('inicio', false); vivo = true; }
+    });
+  }
+
+  // ── a demonstração inicial ────────────────────────────────────
+  if (reduzido) {
+    mostrar('inicio', false);
+    return;
+  }
+
+  var d = 0;
+
+  (function correr() {
+    if (vivo) return;             // a pessoa tomou conta: pára
+
+    mostrar(demo[d], true);
+
+    d += 1;
+
+    if (d < demo.length) {
+      tarefa = setTimeout(correr, d === demo.length - 1 ? 2400 : 1700);
+    } else {
+      /* Fica no ultimo ecra e volta ao inicio, para quem chega
+         atrasado encontrar o menu e nao um ecra de conclusao. */
+      tarefa = setTimeout(function () {
+        if (!vivo) mostrar('inicio', false);
+      }, 3600);
+    }
+  })();
+
+}());
+
+/* menu de telemóvel */
+(function () {
+  var b = document.getElementById('menuBtn');
+  var n = document.getElementById('nav');
+  if (!b || !n) return;
+
+  b.addEventListener('click', function () {
+    var aberto = n.classList.toggle('aberto');
+    b.setAttribute('aria-expanded', aberto ? 'true' : 'false');
+  });
+
+  n.addEventListener('click', function (e) {
+    if (e.target.tagName === 'A') {
+      n.classList.remove('aberto');
+      b.setAttribute('aria-expanded', 'false');
+    }
+  });
+}());
+</script>
+
+</body>
+</html>
