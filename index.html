@@ -277,12 +277,27 @@ a { color: inherit; }
   gap: 9px;
   font-family: 'Archivo', sans-serif;
   font-size: 13px;
-  font-weight: 600;
-  color: var(--musgo);
-  border: 1px solid rgba(151,188,98,.34);
+  font-weight: 700;
+  border: 1px solid rgba(201,150,44,.4);
   border-radius: 40px;
   padding: 6px 15px 6px 11px;
   margin-bottom: 26px;
+  background: linear-gradient(90deg, rgba(151,188,98,.14) 0%, rgba(201,150,44,.14) 100%);
+  box-shadow: 0 2px 12px rgba(201,150,44,.15);
+}
+
+.selo-texto {
+  background: linear-gradient(90deg, var(--musgo) 0%, var(--ouro) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.titulo-mocambique {
+  background: linear-gradient(90deg, var(--folha) 0%, var(--musgo) 55%, var(--ouro) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 /* A BANDEIRA SUBSTITUI O PONTO VERDE, e nao se junta a ele: dois
@@ -1610,22 +1625,40 @@ a { color: inherit; }
   gap: 14px 30px;
   align-items: center;
   justify-content: space-between;
-  padding: 22px 0 34px;
+  padding: 26px 28px 34px;
+  margin: 0 -28px;
   border-top: 1px solid rgba(255,255,255,.08);
+  background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,.18) 100%);
+  position: relative;
   font-size: 13.5px;
   color: rgba(255,255,255,.44);
+}
+
+.rodape-baixo::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 28px; right: 28px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--ouro) 50%, transparent 100%);
+  opacity: .5;
 }
 
 .rodape-baixo a { color: rgba(255,255,255,.6); text-decoration: none; }
 .rodape-baixo a:hover { color: var(--musgo); }
 
-.rodape-xnae {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
+.rodape-xnae { line-height: 1.7; }
+
+.marca-xnae {
+  background: linear-gradient(90deg, var(--ouro) 0%, #E8C878 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+  text-decoration: none;
+  transition: opacity .15s ease;
 }
 
-.rodape-xnae strong { color: rgba(255,255,255,.82); font-weight: 700; }
+.marca-xnae:hover { opacity: .8; }
 
 @media (max-width: 940px) {
   .rodape-corpo { grid-template-columns: 1fr 1fr; gap: 36px; }
@@ -1744,7 +1777,7 @@ a { color: inherit; }
           <path d="M4.6 6.4 l.85 2.6 h2.75 l-2.22 1.62 .85 2.6 -2.23-1.61
                    -2.22 1.61 .85-2.6 -2.22-1.62 h2.74 z" fill="#FCE100"/>
         </svg>
-        Construído em Moçambique
+        <span class="selo-texto">Construído em Moçambique</span>
       </span>
 
       <h1>Do terreno ao mercado,
@@ -2366,8 +2399,8 @@ a { color: inherit; }
   <div class="env contacto-grelha">
 
     <div>
-      <h2>Feito em Moçambique, para Moçambique</h2>
-      <p>A XNAE é uma empresa moçambicana. O AgroMoz foi desenhado e escrito
+      <h2 class="titulo-mocambique">Feito em Moçambique, para Moçambique</h2>
+      <p>A <a href="https://xnae-site-oficial.vercel.app" target="_blank" rel="noopener" class="marca-xnae">XNAE</a> é uma empresa moçambicana. O AgroMoz foi desenhado e escrito
       aqui, com conhecimento das províncias, das operadoras e da forma como as
       delegações trabalham. Não é um sistema estrangeiro traduzido — e isso
       vê-se nas decisões: o telemóvel simples primeiro, o preço decidido pela
@@ -2429,7 +2462,7 @@ a { color: inherit; }
     </div>
 
     <div class="cartao">
-      <div class="cartao-nome">XNAE</div>
+      <div class="cartao-nome"><a href="https://xnae-site-oficial.vercel.app" target="_blank" rel="noopener" class="marca-xnae">XNAE</a></div>
       <div class="cartao-papel">Consultoria em Engenharia Informática</div>
 
       <div class="cartao-linha">
@@ -2564,7 +2597,7 @@ a { color: inherit; }
             <circle cx="12" cy="12" r="9"/>
             <path d="M3 12h18M12 3a15 15 0 010 18 15 15 0 010-18"/>
           </svg>
-          Site da XNAE
+          Site da <span class="marca-xnae">XNAE</span>
         </a>
 
         <a class="rodape-cont" href="#contacto">
@@ -2583,7 +2616,7 @@ a { color: inherit; }
       <span class="rodape-xnae">
         Desenvolvido pela
         <a href="https://xnae-site-oficial.vercel.app" target="_blank"
-           rel="noopener"><strong>XNAE</strong></a> — Consultoria em Engenharia
+           rel="noopener" class="marca-xnae">XNAE</a> — Consultoria em Engenharia
         Informática
       </span>
 
