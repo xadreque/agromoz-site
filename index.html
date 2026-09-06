@@ -174,20 +174,50 @@ a { color: inherit; }
 }
 
 @media (max-width: 900px) {
-  .nav { display: none; }
-  .nav.aberto {
+  .nav {
     display: flex;
     position: absolute;
     top: 68px; left: 0; right: 0;
     flex-direction: column;
     align-items: stretch;
     gap: 0;
-    background: var(--floresta);
+    background: linear-gradient(160deg, var(--escuro) 0%, var(--floresta) 55%, var(--folha) 160%);
     padding: 8px 28px 20px;
-    border-bottom: 1px solid rgba(255,255,255,.12);
+    border-radius: 0 0 18px 18px;
+    box-shadow: 0 18px 40px rgba(0,0,0,.35);
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    opacity: 0;
+    transform: translateY(-10px);
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity .22s ease, transform .22s ease, visibility .22s;
   }
-  .nav.aberto a { padding: 13px 0; border-bottom: 1px solid rgba(255,255,255,.08); }
-  .nav.aberto .nav-cta { margin-top: 12px; text-align: center; }
+  .nav::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0; left: 24px; right: 24px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, var(--ouro) 50%, transparent 100%);
+  }
+  .nav.aberto {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+    pointer-events: auto;
+  }
+  .nav a {
+    padding: 13px 0;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    transition: padding-left .15s ease, color .15s ease;
+  }
+  .nav a:hover { padding-left: 6px; }
+  .nav .nav-cta {
+    margin-top: 14px;
+    text-align: center;
+    background: linear-gradient(135deg, var(--ouro) 0%, #E0B550 100%);
+    box-shadow: 0 4px 14px rgba(201,150,44,.35);
+  }
   .menu-btn { display: block; }
 }
 
@@ -3120,6 +3150,15 @@ a { color: inherit; }
 
   n.addEventListener('click', function (e) {
     if (e.target.tagName === 'A') {
+      n.classList.remove('aberto');
+      b.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  document.addEventListener('click', function (e) {
+    var aberto = n.classList.contains('aberto');
+    var cliqueDentro = n.contains(e.target) || b.contains(e.target);
+    if (aberto && !cliqueDentro) {
       n.classList.remove('aberto');
       b.setAttribute('aria-expanded', 'false');
     }
