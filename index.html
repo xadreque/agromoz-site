@@ -217,9 +217,19 @@ a { color: inherit; }
     flex-direction: column;
     align-items: stretch;
     gap: 0;
-    background: var(--floresta);
-    padding: 8px 28px 20px;
+    /* Um degrade e nao um verde chapado, com sombra por baixo: sem a
+       sombra o menu parecia parte do cabecalho, e nao uma camada por
+       cima da pagina. */
+    background: linear-gradient(180deg, #17402B, var(--floresta));
+    padding: 8px 28px 22px;
     border-bottom: 1px solid rgba(255,255,255,.12);
+    box-shadow: 0 22px 44px rgba(0,0,0,.4);
+    animation: menuDesce .22s cubic-bezier(.2,.8,.3,1);
+  }
+
+  @keyframes menuDesce {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: none; }
   }
   .nav.aberto a { padding: 13px 0; border-bottom: 1px solid rgba(255,255,255,.08); }
   .nav.aberto .nav-cta { margin-top: 12px; text-align: center; }
@@ -3728,22 +3738,71 @@ a { color: inherit; }
   }
 }());
 
-/* menu de telemóvel */
+/* ═══════════════════════════════════════════════════════════════
+   O MENU DE TELEMOVEL
+
+   Fecha-se de quatro maneiras: pelo botao, ao escolher um destino,
+   ao carregar fora, e com a tecla Escape.
+
+   AS TRES ULTIMAS SAO O QUE FALTAVA. Um menu que so fecha pelo botao
+   obriga a pessoa a voltar atras para o fechar — e quem carrega fora
+   esta a dizer que mudou de ideias, nao que quer o menu aberto.
+   ═══════════════════════════════════════════════════════════════ */
 (function () {
+  'use strict';
+
   var b = document.getElementById('menuBtn');
   var n = document.getElementById('nav');
   if (!b || !n) return;
 
-  b.addEventListener('click', function () {
-    var aberto = n.classList.toggle('aberto');
-    b.setAttribute('aria-expanded', aberto ? 'true' : 'false');
+  function abrir() {
+    n.classList.add('aberto');
+    b.setAttribute('aria-expanded', 'true');
+    b.textContent = 'Fechar';
+
+    /* A pagina nao rola por tras do menu aberto: rolar por baixo de
+       um menu que tapa o ecra desorienta, e ao fechar a pessoa nao
+       sabe onde ficou. */
+    document.body.style.overflow = 'hidden';
+  }
+
+  function fechar() {
+    if (!n.classList.contains('aberto')) return;
+
+    n.classList.remove('aberto');
+    b.setAttribute('aria-expanded', 'false');
+    b.textContent = 'Menu';
+    document.body.style.overflow = '';
+  }
+
+  b.addEventListener('click', function (e) {
+    e.stopPropagation();          // senão o clique fora fecha-o logo
+    if (n.classList.contains('aberto')) fechar();
+    else abrir();
   });
 
+  // ── escolher um destino fecha ──
   n.addEventListener('click', function (e) {
-    if (e.target.tagName === 'A') {
-      n.classList.remove('aberto');
-      b.setAttribute('aria-expanded', 'false');
+    if (e.target.closest('a')) fechar();
+    else e.stopPropagation();     // clicar no fundo do menu não fecha
+  });
+
+  // ── carregar fora fecha ──
+  document.addEventListener('click', fechar);
+
+  // ── a tecla Escape fecha ──
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      fechar();
+      b.focus();                  // devolve o foco a quem o abriu
     }
+  });
+
+  /* Ao alargar a janela para alem do ponto em que o menu de telemovel
+     existe, o menu normal reaparece — e o overflow bloqueado ficava
+     preso sem nada que o desbloqueasse. */
+  window.addEventListener('resize', function () {
+    if (window.innerWidth > 900) fechar();
   });
 }());
 </script>
