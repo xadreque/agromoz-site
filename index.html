@@ -546,16 +546,36 @@ a { color: inherit; }
 
 /* A imagem cresce devagar enquanto esta a vista: da vida a fotografia
    parada, e e o unico movimento continuo da pagina. */
+/* A FOTOGRAFIA MOVE-SE COM O SCROLL, mais devagar do que a pagina.
+   E o efeito que os sitios de peso usam: da profundidade sem truque
+   nenhum, porque o olho le a diferenca de velocidade como distancia.
+
+   A imagem e mais alta do que a moldura (124%) para haver margem
+   onde deslizar — sem isso via-se o fundo por baixo. */
 .car-foto {
   position: absolute;
-  inset: 0;
+  left: 0; right: 0;
+  top: -12%;
+  height: 124%;
   background-size: cover;
   background-position: center;
-  transform: scale(1.04);
-  transition: transform 7s linear;
+  will-change: translate, scale;
+
+  /* DUAS PROPRIEDADES SEPARADAS, e nao um transform so. O deslize do
+     scroll tem de ser imediato e o crescimento tem de demorar sete
+     segundos — no mesmo transform, a transicao longa engolia o
+     deslize e o movimento ficava invisivel.
+
+     'translate' e 'scale' separados deixam cada um ter o seu tempo. */
+  translate: 0 0;
+  scale: 1.02;
+  transition: scale 1.2s ease;
 }
 
-.car-slide.on .car-foto { transform: scale(1.12); }
+.car-slide.on .car-foto {
+  scale: 1.12;
+  transition: scale 7s linear;
+}
 
 /* Enquanto nao ha fotografia, um fundo desenhado com a paleta do
    sitio. Nao e um espaco vazio — e o lugar marcado, e ve-se logo
@@ -567,12 +587,27 @@ a { color: inherit; }
     linear-gradient(150deg, #1B5E38, #123524 55%, #0A1F14);
 }
 
+/* QUATRO CAMADAS NO VEU, e nao uma. O texto tem de se ler sobre uma
+   fotografia que nao escolhemos — pode ser clara, escura, com ceu ou
+   com terra. Uma camada so resulta numa e falha na seguinte.
+
+   A camada verde e o que liga a fotografia ao resto do sitio: sem
+   ela, tres imagens de cores diferentes partem a pagina ao meio. */
 .car-veu {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(10,31,20,.42) 0%, transparent 34%),
-    linear-gradient(0deg, rgba(6,15,10,.92) 0%, rgba(10,31,20,.55) 42%, transparent 72%);
+    linear-gradient(180deg, rgba(6,15,10,.55) 0%, transparent 32%),
+    linear-gradient(0deg,
+      rgba(6,15,10,.95) 0%,
+      rgba(10,31,20,.78) 26%,
+      rgba(18,53,36,.34) 54%,
+      transparent 78%),
+    linear-gradient(96deg,
+      rgba(10,31,20,.72) 0%,
+      rgba(10,31,20,.28) 42%,
+      transparent 66%),
+    linear-gradient(180deg, rgba(27,94,56,.14), rgba(27,94,56,.14));
 }
 
 /* O TEXTO PARA ACIMA DA BARRA: com 62px a ultima linha da descricao
@@ -3627,10 +3662,69 @@ a { color: inherit; }
   }
 
   // quem pediu menos movimento fica com a primeira imagem
-  if (window.matchMedia
-      && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  var menos = window.matchMedia
+    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (menos) {
     travar();
     parado = true;
+  }
+
+  /* ── a fotografia desliza com o scroll ────────────────────────
+     A imagem move-se mais devagar do que a pagina, e o olho le a
+     diferenca de velocidade como distancia. E o que separa uma
+     fotografia colada ao fundo de uma que parece estar atras dele.
+
+     CORRE NO requestAnimationFrame e nao no evento do scroll: o
+     scroll dispara dezenas de vezes por segundo, e mexer no estilo
+     a cada uma faz a pagina engasgar. Assim mexe-se uma vez por
+     quadro, que e o maximo que o ecra mostra.
+     ─────────────────────────────────────────────────────────────── */
+  if (!menos) {
+    var aVista = false;
+    var pedido = false;
+
+    // O deslize e proporcional a altura da seccao: 14% da altura da
+    // janela chega para se notar sem a imagem sair da moldura.
+    var FORCA = 0.22;
+
+    function desenhar() {
+      pedido = false;
+
+      var r = sec.getBoundingClientRect();
+      var h = window.innerHeight;
+
+      if (r.bottom < 0 || r.top > h) return;
+
+      /* -1 quando a seccao esta a entrar por baixo, +1 quando ja
+         saiu por cima. Zero quando esta ao centro do ecra. */
+      var meio = (r.top + r.height / 2 - h / 2) / (h / 2 + r.height / 2);
+
+      var y = Math.max(-1, Math.min(1, meio)) * r.height * FORCA;
+
+      /* So o translate: o scale fica com o CSS, que lhe da os sete
+         segundos do crescimento lento. Mexer nos dois aqui apagaria
+         essa animacao a cada quadro. */
+      slides.forEach(function (s) {
+        var f = s.querySelector('.car-foto');
+        if (f) f.style.translate = '0 ' + y.toFixed(1) + 'px';
+      });
+    }
+
+    function pedir() {
+      if (pedido) return;
+      pedido = true;
+      requestAnimationFrame(desenhar);
+    }
+
+    window.addEventListener('scroll', pedir, { passive: true });
+    window.addEventListener('resize', pedir);
+
+    /* Redesenha ao trocar de slide, senao o novo entrava com o
+       crescimento do anterior. */
+    palco.addEventListener('transitionstart', pedir);
+
+    desenhar();
   }
 }());
 
